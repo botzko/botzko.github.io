@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
   <link rel="stylesheet" href="https://bootswatch.com/5/slate/bootstrap.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="refresh" content="300" />
   <title>Track My Gains TMG</title>
@@ -45,10 +45,12 @@
 </head>
 
 <body>
-<div class="container-fluid" id="app">
+<div class="container-fluid" id="app" v-cloak>
     <div class="row">
         <div class="col">
+        
             <div class="card text-center mb-3" v-bind:class="[short ? 'border-danger' : 'border-success']"style="max-width: 22rem;">
+            <!--div class="alert alert-info">Криси е В Е Л И К А!</div-->
                 <div class="card-header text-center" v-bind:class="[short ? 'negative' : 'positive']">{{ short ? 'Short' : 'Long' }} Ξ{{entryamount}} @ ${{entryprice}} </div>
                     <div class="card-body">
                         <table class="table">
@@ -59,15 +61,13 @@
                               <td v-bind:class="[loss<0 ? 'negative' : 'positive']">$ {{gains}}</td>
                               <td v-bind:class="[loss<0 ? 'negative' : 'positive']">Ξ {{ethgains}}</td>
                             </tr>
-                        </table>безопасен марджин
-                        <div class="progress">
-                          <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" v-bind:style="{width: entryamount/35*100 + '%'}" ></div>
-                        </div>
+                        </table>
+                        Volume: {{volume}} M
                     </div>
             <div class="status text-success">
                 <span class='dot text-danger float-right'>
                     <transition name="fade">
-                        <i class='fa fa-heart' v-if="heart"></i>
+                       <i class='fa fa-heart' v-if="heart"></i>
                     </transition>
                     &nbsp;
                 </span>
@@ -75,11 +75,11 @@
             </div>
         </div>
     </div>
-<br>
+
 <div class="row">
     <div class="col">
     <div class="card text-center" style="width: 22rem;">
-        <!-- TradingView Widget BEGIN -->
+        <!-- TradingView Widget BEGIN --> 
 <div class="tradingview-widget-container">
   <div id="tradingview_0ebd0"></div>
   <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/ETHUSD/?exchange=KRAKEN" rel="noopener" target="_blank"><span class="blue-text">ETHUSD Chart</span></a> by TradingView</div>
@@ -114,26 +114,7 @@
     </div>
 </div>    
 
-    
-    <br>
-    <div class="row">
-    <div class="col">
-    <div class="card text-center" style="width: 22rem;">
-    <div class="card-header text-center">Теоретичен калкулатор</div>
-    <div class="card-body">
-    <table class="table">
-        <tr>
-          <input type="number" class="text-warning" v-model="theprice"/><br>
-        </tr>
-        <input type="range" class="custom-range" :min="theoretic-300" :max="theoretic+300" v-model="theprice" step="50">
-        <tr>
-          <td>$ {{noDecimal((theprice-entryprice)*entryamount)}}</td>
-          <td>Ξ {{twoDecimal(((theprice-entryprice)*entryamount)/theprice)}}</td>
-        </tr>
-    </table>
-    </div>
-    
-    </div></div></div>
+
 
 
 
@@ -179,79 +160,193 @@
         
 
 
-    <table class="table table-striped table-sm">
+    <table class="table table-striped table-fit table-hover table-sm">
         <thead>
             <tr><th colspan="6" class="text-center text-warning">АРХИВ</th></tr>
         </thead>
-    <tr>
-        <td colspan="2" class="text-center text-secondary" @click="ok=!ok;">Август</td>
-        <td colspan="1" class="text-center text-secondary" @click="ok=!ok;">Ξ1.25</td>
-        <td colspan="1" class="text-center text-secondary" @click="ok=!ok;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td colspan="1" class="text-center text-secondary" @click="ok=!ok;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok=!ok;">Август</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok=!ok;">Ξ1.25</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok=!ok;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok=!ok;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
 
-  	<tr v-for="row in mf01" v-show="ok">
-        <td>{{row.date}}</td>
-        <td>{{row.type}}</td>
-        <td>Ξ{{row.profit}}</td>
-        <td>${{row.static}}</td>
-        <td>${{noDecimal(row.profit * app.theprice)}}</td>
-	</tr>
-    
-    <tr>
-    <td colspan="2" class="text-center text-secondary" @click="ok2=!ok2;">Септември</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok2=!ok2;">Ξ8.25</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok2=!ok2;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok2=!ok2;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    </tr>
-    
-    <tr v-for="row in mf02" v-show="ok2" >
-        <td>{{row.date}}</td>
-        <td>{{row.type}}</td>
-        <td>Ξ{{row.profit}}</td>
-        <td>${{row.static}}</td>
-        <td>${{noDecimal(row.profit * app.theprice)}}</td>
-	</tr>
+        <tr v-for="row in mf01" v-show="ok">
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+        
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok2=!ok2;">Септември</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok2=!ok2;">Ξ8.25</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok2=!ok2;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok2=!ok2;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf02" v-show="ok2" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
 
-    <tr>
-    <td colspan="2" class="text-center text-secondary" @click="ok3=!ok3;">Октомври</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok3=!ok3;">Ξ3.08</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok3=!ok3;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok3=!ok3;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    </tr>
-    
-    <tr v-for="row in mf03" v-show="ok3" >
-        <td>{{row.date}}</td>
-        <td>{{row.type}}</td>
-        <td>Ξ{{row.profit}}</td>
-        <td>${{row.static}}</td>
-        <td>${{noDecimal(row.profit * app.theprice)}}</td>
-	</tr>
-	 <tr>
-    <td colspan="2" class="text-center text-secondary" @click="ok4=!ok4;">Ноември</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok4=!ok4;">Ξ2.82</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok4=!ok4;">${{noDecimal(app.theprice*2.82)}}</td>
-    <td colspan="1" class="text-center text-secondary" @click="ok4=!ok4;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    </tr>
-    
-    <tr v-for="row in mf04" v-show="ok4" >
-        <td>{{row.date}}</td>
-        <td>{{row.type}}</td>
-        <td>Ξ{{row.profit}}</td>
-        <td>${{row.static}}</td>
-        <td>${{noDecimal(row.profit * app.theprice)}}</td>
-	</tr>
-	
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok3=!ok3;">Октомври</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok3=!ok3;">Ξ3.08</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok3=!ok3;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok3=!ok3;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf03" v-show="ok3" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
 
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok4=!ok4;">Ноември</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok4=!ok4;">Ξ1.44</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok4=!ok4;">${{noDecimal(app.theprice*1.44)}}</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok4=!ok4;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf04" v-show="ok4" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+        
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok5=!ok5;">Декември</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok5=!ok5;">Ξ6.52</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok5=!ok5;">${{noDecimal(app.theprice*6.52)}}</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok5=!ok5;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf05" v-show="ok5" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+        
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok6=!ok6;">Януари</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok6=!ok6;">Ξ-11.98</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok6=!ok6;">${{noDecimal(app.theprice*-11.98)}}</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok6=!ok6;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf06" v-show="ok6" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok7=!ok7;">Февруари</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok7=!ok7;">Ξ2.22</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok7=!ok7;">${{noDecimal(app.theprice*2.22)}}</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok7=!ok7;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf07" v-show="ok7" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok8=!ok8;">Март</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok8=!ok8;">Ξ0.93</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok8=!ok8;">${{noDecimal(app.theprice*0.93)}}</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok8=!ok8;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf08" v-show="ok8" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok9=!ok9;">Април</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok9=!ok9;">Ξ0.76</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok9=!ok9;">${{noDecimal(app.theprice*0.76)}}</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok9=!ok9;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf09" v-show="ok9" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok10=!ok10;">Май</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok10=!ok10;">Ξ4.22</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok10=!ok10;">${{noDecimal(app.theprice*4.22)}}</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok10=!ok10;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf10" v-show="ok10" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center text-secondary" @click="ok11=!ok11;">Юни</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok11=!ok11;">Ξ-3.98</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok11=!ok11;">${{noDecimal(app.theprice*-3.98)}}</td>
+            <td colspan="1" class="text-center text-secondary" @click="ok11=!ok11;">&nbsp;&nbsp;<i class="fas fa-plus text-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+        
+        <tr v-for="row in mf11" v-show="ok11" >
+            <td>{{row.date}}</td>
+            <td>{{row.type}}</td>
+            <td>Ξ{{row.profit}}</td>
+            <td>${{row.static}}</td>
+            <td>${{noDecimal(row.profit * app.theprice)}}</td>
+        </tr>
+    </tbody>
 </table>
     
     </div></div></div>
 <br>
-    <div class="row">
+    <!--div class="row">
     <div class="col">
     <div class="card text-left" style="width: 22rem;">
     <div class="card-header text-center">Правила за спокоен живот</div>
     <ol>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
+      <li class="text-danger">Криси е В Е Л И К А!</li>
       <li class="text-danger">Криси е В Е Л И К А!</li>
       <li class="text-warning">На паричката не и харесва да слагаме таргети!</li>
       <li class="text-warning">Боци не се паникьосва, само така ти се струва!</li>
@@ -260,7 +355,7 @@
       <li class="text-info">Ние не сме зайци!!!</li>
       <li class="text-info">Заедно ли сме, винаги ще газим!</li>
     </ol>
-    </div></div></div>
+    </div></div></div-->
          <br><br><br>
          
 </div>
@@ -271,6 +366,15 @@
 var app = new Vue({
   el: '#app',
   data: {
+
+      short: false,
+      entryprice: 1797.60,
+      entryamount: 4.45,
+      colls: 13.10,
+
+
+
+
     table: [
         {date: "08/11", coll: "5.18", type: "Long", profit: "0.18", static: "568"},
         {date: "08/12", coll: "5.22", type: "Short", profit: "0.04", static: "126"},
@@ -363,37 +467,181 @@ var app = new Vue({
         {date: "11/09", coll: "20.29", type: "Short", profit: "0.07", static: "334"},
         {date: "11/09", coll: "20.34", type: "Short", profit: "0.05", static: "240"},
         {date: "11/09", coll: "20.40", type: "Short", profit: "0.06", static: "288"},
+        {date: "11/10", coll: "20.65", type: "Short", profit: "0.25", static: "1171"},
+        {date: "11/11", coll: "20.89", type: "Short", profit: "0.24", static: "1118"},
+        {date: "11/11", coll: "21.14", type: "Short", profit: "0.25", static: "1167"},
+        {date: "11/12", coll: "21.16", type: "Short", profit: "0.02", static: "95"},
+        {date: "11/15", coll: "21.25", type: "Long", profit: "0.09", static: "425"},
+        {date: "11/15", coll: "21.35", type: "Short", profit: "0.10", static: "468"},
+        {date: "11/15", coll: "21.56", type: "Long", profit: "0.21", static: "991"},
+        {date: "11/21", coll: "15.46", type: "Long", profit: "-6.1", static: "-26954"},
+        {date: "11/21", coll: "14.78", type: "Long", profit: "-0.68", static: "-2945"},
+        {date: "11/22", coll: "15.28", type: "Long", profit: "0.50", static: "2141"},
+        {date: "11/22", coll: "15.47", type: "Long", profit: "0.19", static: "806"},
+        {date: "11/23", coll: "15.6", type: "Long", profit: "0.13", static: "546"},
+        {date: "11/23", coll: "15.74", type: "Short", profit: "0.14", static: "582"},
+        {date: "11/23", coll: "15.82", type: "Long", profit: "0.08", static: "335"},
+        {date: "11/23", coll: "16.13", type: "Short", profit: "0.31", static: "1307"},
+        {date: "11/26", coll: "17.47", type: "Short", profit: "1.34", static: "5382"},
+        {date: "11/26", coll: "17.77", type: "Short", profit: "0.30", static: "1205"},
+        {date: "11/26", coll: "18.15", type: "Short", profit: "0.38", static: "1502"},
+        {date: "11/26", coll: "18.44", type: "Long", profit: "0.29", static: "1175"},
+        {date: "11/26", coll: "18.61", type: "Long", profit: "0.17", static: "700"},
+        {date: "11/26", coll: "18.68", type: "Long", profit: "0.07", static: "292"},
+        {date: "11/27", coll: "18.74", type: "Long", profit: "0.06", static: "247"},
+        {date: "11/27", coll: "18.68", type: "Long", profit: "-0.06", static: "-245"},
+        {date: "11/28", coll: "18.46", type: "Long", profit: "-0.22", static: "-896"},
+        {date: "11/29", coll: "18.75", type: "Short", profit: "0.29", static: "1248"},
+        {date: "11/29", coll: "18.90", type: "Long", profit: "0.15", static: "649"},
+        {date: "11/29", coll: "19.02", type: "Short", profit: "0.12", static: "516"},
+        {date: "12/03", coll: "20.42", type: "Short", profit: "1.40", static: "5869"},
+        {date: "12/03", coll: "20.57", type: "Short", profit: "0.15", static: "629"},
+        {date: "12/03", coll: "20.66", type: "Long", profit: "0.09", static: "382"},
+        {date: "12/04", coll: "20.72", type: "Short", profit: "0.06", static: "253"},
+        {date: "12/13", coll: "21.42", type: "Short", profit: "0.70", static: "2736"},
+        {date: "12/13", coll: "21.54", type: "Short", profit: "0.12", static: "463"},
+        {date: "12/13", coll: "21.69", type: "Short", profit: "0.15", static: "579"},
+        {date: "12/13", coll: "21.76", type: "Long", profit: "0.07", static: "267"},
+        {date: "12/13", coll: "22.04", type: "Short", profit: "0.28", static: "1034"},
+        {date: "12/15", coll: "22.67", type: "Short", profit: "0.63", static: "2322"},
+        {date: "12/17", coll: "23.99", type: "Short", profit: "1.32", static: "4926"},
+        {date: "12/20", coll: "25.28", type: "Short", profit: "1.29", static: "4883"},
+        {date: "12/20", coll: "25.5", type: "Long", profit: "0.22", static: "840"},
+        {date: "12/26", coll: "25.34", type: "Short", profit: "-0.16", static: "650"},
+        {date: "12/26", coll: "25.74", type: "Short", profit: "0.40", static: "1635"},
+        {date: "12/26", coll: "25.91", type: "Short", profit: "0.17", static: "701"},
+        {date: "01/01", coll: "19.75", type: "Long", profit: "-6.16", static: "-23228"},
+        {date: "01/05", coll: "19.98", type: "Long", profit: "0.23", static: "850"},
+        {date: "01/06", coll: "16.99", type: "Long", profit: "-2.99", static: "-9890"},
+        {date: "01/06", coll: "14.75", type: "Long", profit: "-2.24", static: "-7409"},
+        {date: "01/07", coll: "17.40", type: "Short", profit: "2.65", static: "8520"},
+        {date: "01/07", coll: "17.65", type: "Short", profit: "0.25", static: "799"},
+        {date: "01/07", coll: "18.53", type: "Short", profit: "0.88", static: "2760"},
+        {date: "01/07", coll: "19.14", type: "Long", profit: "0.61", static: "1944"},
+        {date: "01/07", coll: "19.26", type: "Long", profit: "0.12", static: "379"},
+        {date: "01/07", coll: "19.30", type: "Long", profit: "0.4", static: "126"},
+        {date: "01/08", coll: "19.52", type: "Short", profit: "0.22", static: "693"},
+        {date: "01/08", coll: "19.62", type: "Short", profit: "0.10", static: "318"},
+        {date: "01/08", coll: "19.31", type: "Long", profit: "-0.31", static: "-972"},
+        {date: "01/08", coll: "20.28", type: "Short", profit: "0.97", static: "2948"},
+        {date: "01/08", coll: "19.73", type: "Short", profit: "-0.55", static: "-1711"},
+        {date: "01/09", coll: "18.48", type: "Short", profit: "-1.25", static: "-3974"},
+        {date: "01/09", coll: "18.54", type: "Short", profit: "0.06", static: "192"},
+        {date: "01/09", coll: "17.87", type: "Long", profit: "-0.67", static: "-2086"},
+        {date: "01/09", coll: "18.72", type: "Short", profit: "0.85", static: "2587"},
+        {date: "01/09", coll: "19.09", type: "Short", profit: "0.37", static: "1091"},
+        {date: "01/09", coll: "19.49", type: "Long", profit: "0.4", static: "1202"},
+        {date: "01/09", coll: "19.80", type: "Long", profit: "0.31", static: "941"},
+        {date: "01/18", coll: "17.41", type: "Short", profit: "-2.39", static: "-7542"},
+        {date: "01/19", coll: "18.88", type: "Short", profit: "1.47", static: "4507"},
+        {date: "01/20", coll: "19.47", type: "Short", profit: "0.59", static: "1813"},
+        {date: "01/21", coll: "19.76", type: "Short", profit: "0.29", static: "829"},
+        {date: "01/22", coll: "12.56", type: "Long", profit: "-7.2", static: "-17712"},
+        {date: "01/25", coll: "13.15", type: "Short", profit: "0.59", static: "1444"},
+        {date: "01/26", coll: "13.29", type: "Short", profit: "0.14", static: "354"},
+        {date: "01/26", coll: "13.49", type: "Short", profit: "0.20", static: "504"},
+        {date: "01/26", coll: "13.68", type: "Short", profit: "0.19", static: "460"},
+        {date: "01/27", coll: "13.78", type: "Short", profit: "0.10", static: "236"},
+        {date: "01/27", coll: "13.83", type: "Long", profit: "0.05", static: "121"},
+        {date: "01/27", coll: "14.13", type: "Short", profit: "0.30", static: "722"},
+        {date: "01/27", coll: "13.93", type: "Long", profit: "-0.20", static: "-473"},
+        {date: "02/24", coll: "16.15", type: "Short", profit: "2.22", static: "5246"},
+        {date: "03/07", coll: "16.88", type: "Short", profit: "0.73", static: "1818"},
+        {date: "03/07", coll: "16.92", type: "Short", profit: "0.04", static: "102"},
+        {date: "03/14", coll: "17.08", type: "Short", profit: "0.16", static: "406"},
+        {date: "04/29", coll: "17.39", type: "Short", profit: "0.31", static: "873"},
+        {date: "04/29", coll: "17.44", type: "Short", profit: "0.05", static: "140"},
+        {date: "04/29", coll: "17.50", type: "Short", profit: "0.06", static: "167"},
+        {date: "04/30", coll: "17.64", type: "Short", profit: "0.14", static: "391"},
+        {date: "04/30", coll: "17.84", type: "Short", profit: "0.20", static: "391"},
+        {date: "05/01", coll: "17.90", type: "Long", profit: "0.06", static: "168"},
+        {date: "05/01", coll: "18.08", type: "Short", profit: "0.18", static: "499"},
+        {date: "05/02", coll: "18.15", type: "Long", profit: "0.07", static: "199"},
+        {date: "05/02", coll: "18.27", type: "Long", profit: "0.12", static: "340"},
+        {date: "05/02", coll: "18.33", type: "Long", profit: "0.06", static: "169"},
+        {date: "05/02", coll: "18.47", type: "Long", profit: "0.14", static: "399"},
+        {date: "05/03", coll: "18.52", type: "Long", profit: "0.05", static: "142"},
+        {date: "05/04", coll: "18.61", type: "Long", profit: "0.09", static: "255"},
+        {date: "05/04", coll: "18.65", type: "Long", profit: "0.04", static: "113"},
+        {date: "05/04", coll: "18.71", type: "Long", profit: "0.06", static: "170"},
+        {date: "05/05", coll: "18.78", type: "Short", profit: "0.07", static: "202"},
+        {date: "05/05", coll: "18.68", type: "Long", profit: "-0.10", static: "-287"},
+        {date: "05/05", coll: "19.68", type: "Short", profit: "1.0", static: "2763"},
+        {date: "05/06", coll: "20.24", type: "Short", profit: "0.56", static: "1500"},
+        {date: "05/08", coll: "20.88", type: "Short", profit: "0.64", static: "1676"},
+        {date: "05/09", coll: "19.01", type: "Short", profit: "-1.87", static: "-4552"},
+        {date: "05/09", coll: "18.77", type: "Short", profit: "-0.24", static: "-572"},
+        {date: "05/11", coll: "19.58", type: "Short", profit: "0.81", static: "1854"},
+        {date: "05/11", coll: "19.73", type: "Short", profit: "0.15", static: "325"},
+        {date: "05/11", coll: "18.31", type: "Short", profit: "-1.42", static: "-3011"},
+        {date: "05/15", coll: "18.55", type: "Short", profit: "0.24", static: "514"},
+        {date: "05/15", coll: "17.19", type: "Short", profit: "-1.36", static: "-2913"},
+        {date: "05/18", coll: "17.58", type: "Short", profit: "0.39", static: "764"},
+        {date: "05/18", coll: "17.66", type: "Short", profit: "0.08", static: "157"},
+        {date: "05/19", coll: "17.78", type: "Short", profit: "0.12", static: "235"},
+        {date: "05/19", coll: "17.94", type: "Short", profit: "0.16", static: "308"},
+        {date: "05/20", coll: "18.38", type: "Short", profit: "0.44", static: "866"},
+        {date: "05/24", coll: "18.62", type: "Short", profit: "0.24", static: "468"},
+        {date: "05/25", coll: "18.90", type: "Short", profit: "0.28", static: "545"},
+        {date: "05/25", coll: "18.90", type: "Long", profit: "0.02", static: "39"},
+        {date: "05/26", coll: "19.21", type: "Long", profit: "0.29", static: "537"},
+        {date: "05/26", coll: "20.01", type: "Long", profit: "0.80", static: "1465"},
+        {date: "05/27", coll: "20.22", type: "Long", profit: "0.21", static: "370"},
+        {date: "05/28", coll: "20.33", type: "Long", profit: "0.11", static: "193"},
+        {date: "05/28", coll: "20.45", type: "Long", profit: "0.12", static: "214"},
+        {date: "05/28", coll: "20.50", type: "Long", profit: "0.05", static: "90"},
+        {date: "05/30", coll: "21.29", type: "Long", profit: "0.79", static: "1477"},
+        {date: "05/30", coll: "21.33", type: "Long", profit: "0.04", static: "76"},
+        {date: "05/30", coll: "21.63", type: "Long", profit: "0.30", static: "577"},
+        {date: "05/30", coll: "21.86", type: "Long", profit: "0.30", static: "456"},
+        {date: "05/31", coll: "22.06", type: "Long", profit: "0.20", static: "398"},
+        {date: "06/03", coll: "18.94", type: "Long", profit: "-3.12", static: "-5492"},
+        {date: "06/03", coll: "17.79", type: "Long", profit: "-1.15", static: "-2177"},
+        {date: "06/10", coll: "18.00", type: "Short", profit: "0.19", static: "341"},
+        {date: "06/10", coll: "18.10", type: "Long", profit: "0.1", static: "180"},
+
+
+
+
+
+
     ],	
+
       message: " ",
       ok: false,
       ok2: false,
       ok3: false,
       ok4: false,
-      short: false,
+      ok5: false,
+      ok6: false,
+      ok7: false,
+      ok8: false,
+      ok9: false,
+      ok10: false,
+      ok11: false,
       theprice: 0,
-      theoretic: 4700,
+      theoretic: 3000,
       longs: 0,
       totalBefore: 0,
+      volume: 0,
       shorts: 0,
       rangeprice: 0,
-      entryprice: 4750.70,
-      entryamount: 10.54,
-      colls: 15.04,
       ethgains: 0,
       mf0: [],
       mf01: [],
       mf02: [],
       mf03: [],
       mf04: [],
+      mf05: [],
       loss: 0,
       gains: 0,
       heart: false,
-      msg: {
-        event: "subscribe",
-        pair: ["ETH/USD"],
-        subscription: {
-          "name": "ticker"
-        }
+      msg: {  
+        "event":"subscribe",
+        "feed":"ticker",
+        "product_ids":[  
+            "PI_ETHUSD"
+        ]
       }
   },
   methods: {
@@ -405,35 +653,31 @@ var app = new Vue({
       localStorage.entryamount = this.entryamount;
     },
     noDecimal: function(number){
-        //number = (app.short) ? number * -1 : number;
         return number.toFixed(0);
     },
     twoDecimal: function(number){
-        //number = (app.short) ? number * -1 : number;
         return number.toFixed(2);
     }
   },
   
   created: function() {
     console.log("Starting connection to WebSocket Server")
-    this.connection = new WebSocket("wss://ws.kraken.com")
+    this.connection = new WebSocket("wss://futures.kraken.com/ws/v1")
 
     this.connection.onmessage = function(event) {
-        if (JSON.parse(event.data)[0] == 548){
-          app.theprice = parseFloat(JSON.parse(event.data)[1].c[0]).toFixed(2);
+        //console.log(JSON.parse(event.data).markPrice); // Ако има проблем, махни коментара и виж конзолата
+          app.theprice = parseFloat(JSON.parse(event.data).markPrice).toFixed(2);
           app.rangeprice = app.theprice;
           app.loss = ((app.theprice-app.entryprice)).toFixed(2);
           app.loss = (app.short) ? app.loss * -1 : app.loss;
           app.gains = ((app.theprice-app.entryprice)*app.entryamount).toFixed(2);
           app.gains = (app.short) ? app.gains * -1 : app.gains;
           app.ethgains = (app.gains/app.theprice).toFixed(4);
-          console.log(app.message = app.theprice); // Important
-          
-        }
-        if (event.data[2] == 'e') {
-            app.heart = true; 
-            setTimeout(()=>{app.heart = false;},700);
-        }
+          app.message = app.theprice
+          app.volume = parseFloat(JSON.parse(event.data).volume/1000000).toFixed(1);
+          document.title = app.message;
+          app.heart = true; 
+          setTimeout(()=>{app.heart = false;},700);
     }
     this.connection.onopen = function(event) {
       console.log(event);
@@ -458,7 +702,13 @@ app.mf01 = app.table.filter(element => element.date.split('/')[0]==08);
 app.mf02 = app.table.filter(element => element.date.split('/')[0]==09);
 app.mf03 = app.table.filter(element => element.date.split('/')[0]==10);
 app.mf04 = app.table.filter(element => element.date.split('/')[0]==11);
-
+app.mf05 = app.table.filter(element => element.date.split('/')[0]==12);
+app.mf06 = app.table.filter(element => element.date.split('/')[0]==01);
+app.mf07 = app.table.filter(element => element.date.split('/')[0]==02);
+app.mf08 = app.table.filter(element => element.date.split('/')[0]==03);
+app.mf09 = app.table.filter(element => element.date.split('/')[0]==04);
+app.mf10 = app.table.filter(element => element.date.split('/')[0]==05);
+app.mf11 = app.table.filter(element => element.date.split('/')[0]==06);
 
 app.table.forEach(function(element){
     //console.log(element.date) //Рови из таблицата

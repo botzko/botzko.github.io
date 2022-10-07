@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    <title>Toolche 2</title>
+<style>
+body{
+    padding: 0px;
+    margin: 0px;
+    color: white; 
+    text-align: center; 
+    font-size: 35px;
+    line-height: 15px;
+    font-family: 'Roboto Mono', monospace; 
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.price{
+    color:#00a8e0;
+}
+</style>
+</head>
+<body>
+<h1 class="price"></h1>
+<h1 class="theprice"></h1>
+<span class="gains"></span><br><br><br>
+<span class="ethgains"></span>
+<br><br><br>
+
+<script>
+const msg = {  
+    "event":"subscribe",
+    "feed":"ticker",
+    "product_ids":[  
+        "PF_XBTUSD"
+    ]
+}
+let short = false;
+let amount = 0.6557;
+let price = 19963;
+
+let gains = 0;
+let theprice = 0;
+let thebid = 0;
+let theask = 0;
+let viewtheprice = document.querySelector(".theprice");
+let viewprice = document.querySelector(".price");
+let viewgains = document.querySelector(".gains");
+let viewethgains = document.querySelector(".ethgains");
+
+
+webSocket = new WebSocket("wss://futures.kraken.com/ws/v1");
+webSocket.onmessage = function (event) {
+    //console.log(event.data);
+    theprice = parseFloat(JSON.parse(event.data).markPrice).toFixed(2);
+    gains = ((theprice-price)*amount).toFixed(2);
+    gains = (short) ? gains * -1 : gains;
+    ethgains = (gains/theprice).toFixed(4);
+    document.title = theprice;
+
+    viewtheprice.innerHTML=theprice;
+    viewprice.innerHTML=price;
+    viewgains.innerHTML="[ $ "+gains+" ] ";
+    viewethgains.innerHTML="[ Ξ "+ethgains+" ] ";
+}
+webSocket.onopen = function(event) {
+    webSocket.send(JSON.stringify(msg));
+}
+</script>
+</body>
+</html>

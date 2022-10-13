@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head> </head>
+  <style>
+    body{
+        background: #8E1212;
+        color: #FFB800;
+        width: 210px;
+        text-align: center;
+        padding: 0px;
+        margin: 0px auto;
+    }
+    h1{
+        text-shadow: 0px 0px 8px #000000;
+    }
+    .display{
+        display: inline-block;
+        width: 150px;
+        height: 150px;
+        line-height: 150px;
+        border-radius: 50%;
+        font-size: 28px;
+        color: #FFB800;
+        border: 3px solid #FFB800;
+        text-align: center;
+        background: #581414;
+        box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.25);
+    }
+    button{
+        color: #FFB800;
+        border: none;
+        text-align: center;
+        background: #581414;
+        box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.25);
+        padding: 10px;
+        margin: 10px;
+    }
+    .history{
+        font-size: 22px;
+    }
+  </style>
+  <body>
+    <h1>FASTING</h1>
+    <div class="display">00:00:00</div>
+    <br><br>
+    <button class="start">Start</button>
+    <button class="stop">Stop</button>
+    <br><br>
+    <div class="history"></div>
+    <br><br>
+    <script>
+        let display = document.querySelector(".display");
+        let history = document.querySelector(".history");
+        let start = document.querySelector(".start");
+        let stops = document.querySelector(".stop");
+        
+        if(localStorage.d != "00:00:00"){
+            history.innerHTML = localStorage.c;
+        }else{
+            timer();
+        }
+        start.addEventListener('click', (event) => { 
+            localStorage.a = new Date();
+            timer();
+            localStorage.d = "00:00:00";
+        }); 
+        stops.addEventListener('click', (event) => {  
+            clearInterval(intervalID);
+            localStorage.b = new Date();
+            localStorage.d = localStorage.c;
+            history.innerHTML = localStorage.c;
+            display.innerHTML = "00:00:00";
+        }); 
+        
+        function timer(){
+            intervalID = setInterval(() => {
+                transform();
+            }, "1000");
+        }
+        
+        function transform(){
+            localStorage.b = new Date();
+            a = Date.parse(localStorage.a);
+            b = Date.parse(localStorage.b);
+            let timeDiff = b - a;
+            timeDiff /= 1000; 
+            let seconds = Math.round(timeDiff);
+            localStorage.c = secondsToTime(seconds);
+            display.innerHTML = secondsToTime(seconds);
+        }
+        
+        function secondsToTime(e){
+            const h = Math.floor(e / 3600).toString().padStart(2,'0'),
+                  m = Math.floor(e % 3600 / 60).toString().padStart(2,'0'),
+                  s = Math.floor(e % 60).toString().padStart(2,'0');
+            return h + ':' + m + ':' + s; //return `${h}:${m}:${s}`; // 02:08:55
+        }
+    </script>
+  </body>
+</html>

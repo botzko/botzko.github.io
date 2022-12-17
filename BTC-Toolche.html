@@ -31,6 +31,7 @@ body{
 <span class="ethgains"></span>
 <br><br><br>
 <h3>V1</h3>
+<h1 class="Vprice"></h1>
 <span class="Vgains"></span>
 <script>
 const msg = {  
@@ -54,7 +55,7 @@ let viewprice = document.querySelector(".price");
 let viewgains = document.querySelector(".gains");
 let viewethgains = document.querySelector(".ethgains");
 let viewVgains = document.querySelector(".Vgains");
-
+let viewVprice = document.querySelector(".Vprice");
 
 webSocket = new WebSocket("wss://futures.kraken.com/ws/v1");
 webSocket.onmessage = function (event) {
@@ -66,6 +67,7 @@ webSocket.onmessage = function (event) {
     document.title = theprice;
     viewtheprice.innerHTML=theprice;
     viewprice.innerHTML=price;
+    viewVprice.innerHTML=Vgains;
     viewgains.innerHTML="[ $ "+gains+" ] ";
     //viewethgains.innerHTML="[ Ξ "+ethgains+" ] ";
     viewVgains.innerHTML="[ $ "+((Vgains-theprice)*(amount/2)).toFixed(2)+" ] ";

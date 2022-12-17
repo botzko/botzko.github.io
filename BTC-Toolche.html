@@ -68,7 +68,7 @@ webSocket.onmessage = function (event) {
     viewprice.innerHTML=price;
     viewgains.innerHTML="[ $ "+gains+" ] ";
     //viewethgains.innerHTML="[ Ξ "+ethgains+" ] ";
-    viewVgains.innerHTML="[ $ "+(Vgains-theprice)*(amount/2)+" ] ";
+    viewVgains.innerHTML="[ $ "+((Vgains-theprice)*(amount/2)).toFixed(2)+" ] ";
 }
 webSocket.onopen = function(event) {
     webSocket.send(JSON.stringify(msg));

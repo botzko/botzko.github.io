@@ -30,7 +30,8 @@ body{
 <span class="gains"></span><br><br><br>
 <span class="ethgains"></span>
 <br><br><br>
-
+<h1>Втъкана Позиция</h1>
+<span class="Vgains"></span>
 <script>
 const msg = {  
     "event":"subscribe",
@@ -40,8 +41,9 @@ const msg = {
     ]
 }
 let short = false;
-let amount = 2.9;
-let price = 17726.35;
+let amount = 3;
+let price = 17692.10;
+let Vgains = 16715;
 
 let gains = 0;
 let theprice = 0;
@@ -51,6 +53,7 @@ let viewtheprice = document.querySelector(".theprice");
 let viewprice = document.querySelector(".price");
 let viewgains = document.querySelector(".gains");
 let viewethgains = document.querySelector(".ethgains");
+let viewVgains = document.querySelector(".Vgains");
 
 
 webSocket = new WebSocket("wss://futures.kraken.com/ws/v1");
@@ -65,6 +68,7 @@ webSocket.onmessage = function (event) {
     viewprice.innerHTML=price;
     viewgains.innerHTML="[ $ "+gains+" ] ";
     //viewethgains.innerHTML="[ Ξ "+ethgains+" ] ";
+    viewVgains.innerHTML="[ $ "+(Vgains-theprice)*(amount/2)+" ] ";
 }
 webSocket.onopen = function(event) {
     webSocket.send(JSON.stringify(msg));

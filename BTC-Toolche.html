@@ -61,13 +61,6 @@ webSocket.onmessage = function (event) {
     gains = (short) ? gains * -1 : gains;
     ethgains = (gains/theprice).toFixed(4);
     document.title = theprice;
-    let dots = 1;
-    setInterval(() => {
-        document.title = "Hold on" + ".".repeat(dots);
-        dots++;
-        if (dots > 3) dots = 1;
-    }, 1000);
-
     viewtheprice.innerHTML=theprice;
     viewprice.innerHTML=price;
     viewgains.innerHTML="[ $ "+gains+" ] ";

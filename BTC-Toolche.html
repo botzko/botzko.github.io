@@ -17,7 +17,6 @@ body{
     font-size: 35px;
     line-height: 15px;
     font-family: 'Roboto Mono', monospace; 
-    
     background-color: #0f2027;
 }
 .price{
@@ -62,6 +61,12 @@ webSocket.onmessage = function (event) {
     gains = (short) ? gains * -1 : gains;
     ethgains = (gains/theprice).toFixed(4);
     document.title = theprice;
+    let dots = 1;
+    setInterval(() => {
+        document.title = "Hold on" + ".".repeat(dots);
+        dots++;
+        if (dots > 3) dots = 1;
+    }, 1000);
 
     viewtheprice.innerHTML=theprice;
     viewprice.innerHTML=price;

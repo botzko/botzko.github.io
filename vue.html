@@ -9,8 +9,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="refresh" content="300" />
   <title>First Page</title>
-<br>
-<center><h1 style="color:chocolate">Започваме!</h1></center>
-</script>
+
+</head>
+<body>
+    
+    <div id="app">
+        <h1>Counter: {{ counter }}</h1>
+        <button @click="increment">Increment</button>
+        <button @click="decrement">Decrement</button>
+      </div>
+    
+      <script>
+        const app = Vue.createApp({
+          data() {
+            return {
+              counter: 0
+            };
+          },
+          methods: {
+            increment() {
+              this.counter++;
+            },
+            decrement() {
+              this.counter--;
+            }
+          }
+        });
+    
+        app.mount('#app');
+      </script>
 </body>
 </html>

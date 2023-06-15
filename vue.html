@@ -13,11 +13,11 @@
 </head>
 <body>
     
-    <div id="app">
+    <div id="app" class="container-fluid">
         <h1>Counter: {{ counter }}</h1>
         <button @click="increment" class="btn btn-success">Increment</button>
         <button @click="decrement" class="btn btn-danger">Decrement</button>
-      </div>
+    </div>
     
       <script>
         const app = Vue.createApp({

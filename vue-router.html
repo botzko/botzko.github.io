@@ -37,9 +37,11 @@
     <router-link to="/">Home</router-link>
     <router-link to="/about">About</router-link>
     <router-link to="/news">News</router-link>
-    <transition name="slide" mode="out-in">
-        <router-view></router-view>
-    </transition>
+    <router-view v-slot="{ Component }">
+        <transition :name="slide" mode="out-in">
+            <Component :is="Component" />
+        </transition>
+    </router-view>
   </div>
 
   <script>

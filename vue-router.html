@@ -13,6 +13,7 @@
   <div id="app">
     <router-link to="/">Home</router-link>
     <router-link to="/about">About</router-link>
+    <router-link to="/news">News</router-link>
     <router-view></router-view>
   </div>
 
@@ -25,11 +26,14 @@
     const About = {
       template: '<h2>About Page</h2>'
     };
-
+    const News = {
+      template: '<h2>News Page from Botzko</h2>'
+    };
     // Configure routes
     const routes = [
       { path: '/', component: Home },
-      { path: '/about', component: About }
+      { path: '/about', component: About },
+      { path: '/news', component: News }
     ];
 
     // Create router instance

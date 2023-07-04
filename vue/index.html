@@ -14,7 +14,15 @@
     .fade-leave-to {
       opacity: 0;
     }
-    
+    .home {
+    background-image: url('/home-background.jpg');
+    /* Additional background styles */
+  }
+
+    .dashboard {
+      background-image: url('/dashboard-background.jpg');
+      /* Additional background styles */
+    }
     </style>
 </head>
 <body>
@@ -42,11 +50,13 @@
     firebase.initializeApp(firebaseConfig);
 
     var Home = {
-      template: '<h1>Welcome to the Home page!</h1>'
+      template: `
+      <div class="home"><h1>Welcome to the Home page!</h1></div>
+      `
     };
 
     var Dashboard = {
-      template: '<h1>Welcome to the Dashboard page!</h1>'
+      template: `<div class="dashboard"><h1>Welcome to the Dashboard page!</h1></div>`
     };
 
     var router = new VueRouter({

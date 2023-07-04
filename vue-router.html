@@ -17,6 +17,15 @@
 .fade-leave-to {
   opacity: 0;
 }
+.enter { transform: translateX(100%) }
+.enter-to { transform: translateX(0) }
+.slide-enter-active { position: absolute }
+
+.leave { transform: translateX(0) }
+.leave-to { transform: translateX(-100%) }
+
+.slide-enter-active,
+.slide-leave-active { transition: all 750ms ease-in-out }
 </style>
 </head>
 
@@ -25,7 +34,7 @@
     <router-link to="/">Home</router-link>
     <router-link to="/about">About</router-link>
     <router-link to="/news">News</router-link>
-    <transition name="fade" mode="out-in">
+    <transition name="slide" mode="out-in">
         <router-view></router-view>
     </transition>
   </div>

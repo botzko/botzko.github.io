@@ -12,8 +12,8 @@
 
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
+
   <script>
-    // Your Firebase configuration here
     var firebaseConfig = {
         apiKey: "AIzaSyCvu5huN46Jst9rGVzJT_vnlkt_D27PZ-U",
     authDomain: "vue-app-84.firebaseapp.com",
@@ -22,11 +22,43 @@
     messagingSenderId: "643284874972",
     appId: "1:643284874972:web:9430f0ca598188d9aea619"
     };
-
-    // Initialize Firebase
+  
     firebase.initializeApp(firebaseConfig);
+  
+    var Home = {
+      template: '<h1>Welcome to the Home page!</h1>'
+    };
+  
+    var Dashboard = {
+      template: '<h1>Welcome to the Dashboard page!</h1>'
+    };
+  
+    var router = new VueRouter({
+      routes: [
+        { path: '/', component: Home },
+        { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } }
+      ]
+    });
+  
+    router.beforeEach(function (to, from, next) {
+      var requiresAuth = to.matched.some(function (record) {
+        return record.meta.requiresAuth;
+      });
+  
+      var currentUser = firebase.auth().currentUser;
+  
+      if (requiresAuth && !currentUser) {
+        next('/');
+      } else {
+        next();
+      }
+    });
+  
+    new Vue({
+      el: '#app',
+      router: router
+    });
   </script>
-  <script src="main.js"></script>
 </body>
 </html>
 

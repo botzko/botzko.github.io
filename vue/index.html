@@ -35,12 +35,21 @@
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
     }
+    .profile-picture {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
     </style>
 </head>
 <body>
   <div id="app">
     <button v-if="!user" @click="login">Login with Google</button>
     <button v-if="user" @click="logout">Logout</button>
+    <div v-if="user">
+      <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
+      <h3>Welcome, {{ user.displayName }}</h3>
+    </div>
     <transition name="fade" mode="out-in">
       <router-view></router-view>
     </transition>

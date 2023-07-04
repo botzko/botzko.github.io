@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vue Firebase App</title>
+  <script src="https://unpkg.com/vue@2.6.14"></script>
+  <script src="https://unpkg.com/vue-router@3.5.2"></script>
+</head>
+<body>
+  <div id="app">
+    <button v-if="!user" @click="login">Login with Google</button>
+    <button v-if="user" @click="logout">Logout</button>
+    <router-view></router-view>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyCvu5huN46Jst9rGVzJT_vnlkt_D27PZ-U",
+      authDomain: "vue-app-84.firebaseapp.com",
+      projectId: "vue-app-84",
+      storageBucket: "vue-app-84.appspot.com",
+      messagingSenderId: "643284874972",
+      appId: "1:643284874972:web:9430f0ca598188d9aea619"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    var Home = {
+      template: '<h1>Welcome to the Home page!</h1>'
+    };
+
+    var Dashboard = {
+      template: '<h1>Welcome to the Dashboard page!</h1>'
+    };
+
+    var router = new VueRouter({
+      routes: [
+        { path: '/', component: Home },
+        { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } }
+      ]
+    });
+
+    router.beforeEach(function (to, from, next) {
+      var requiresAuth = to.matched.some(function (record) {
+        return record.meta.requiresAuth;
+      });
+
+      var user = firebase.auth().currentUser;
+
+      if (requiresAuth && !user) {
+        next('/');
+      } else {
+        next();
+      }
+    });
+
+    new Vue({
+      el: '#app',
+      router: router,
+      data: {
+        user: null
+      },
+      methods: {
+        login: function() {
+          var provider = new firebase.auth.GoogleAuthProvider();
+          firebase.auth().signInWithRedirect(provider);
+        },
+        logout: function() {
+          firebase.auth().signOut()
+            .then(function() {
+              this.user = null;
+              this.$router.push('/');
+            }.bind(this))
+            .catch(function(error) {
+              console.error(error);
+            });
+        }
+      },
+      created: function() {
+        firebase.auth().onAuthStateChanged(function(user) {
+          this.user = user;
+          if (user) {
+            if (this.$route.path === '/') {
+              this.$router.push('/dashboard');
+            }
+          }
+        }.bind(this));
+
+        firebase.auth().getRedirectResult().catch(function(error) {
+          console.error(error);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

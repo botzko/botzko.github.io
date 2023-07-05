@@ -6,49 +6,72 @@
   <script src="https://unpkg.com/vue-router@3.5.2"></script>
   <style>
     body{
-      margin: 0px;
-      padding: 0px;
+        margin: 0px;
+        padding: 0px;
     }
     .fade-enter-active,
     .fade-leave-active {
-      transition: opacity 0.5s;
+        transition: opacity 0.5s;
     }
-    
     .fade-enter,
     .fade-leave-to {
-      opacity: 0;
+        opacity: 0;
     }
     .home {
-    background-image: url('https://botzko.github.io/vue/home-background.jpg');
-    background-color: #cccccc; /* Used if the image is unavailable */
-  height: 2000px; /* You must set a specified height */
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
+        background-image: url('https://botzko.github.io/vue/home-background.jpg');
+        background-color: #cccccc;
+        height: 2000px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
   }
 
     .dashboard {
-      background-image: url('https://botzko.github.io/vue/dashboard-background.jpg');
-      background-color: #cccccc; /* Used if the image is unavailable */
-  height: 2000px; /* You must set a specified height */
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
+        background-image: url('https://botzko.github.io/vue/dashboard-background.jpg');
+        background-color: #cccccc;
+        height: 2180px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
     .profile-picture {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
+        width: 285px;
+        height: 285px;
+        border-radius: 50%;
+    }
+    .userData{
+        margin: 340px auto;
+        width: 99%;
+        position: absolute;
+        text-align: center;
+    }
+    .userName{
+        font-size: 70px;
+        margin-top: 10px;
+    }
+    .login{
+        position: absolute;
+        margin: 1720px auto;
+        left: 25%;
+        width: 52%;
+        height: 6%;
+        font-size: x-large;
+    }
+    .logout{
+        position: absolute;
+        margin: 982px auto;
+        left: 44%;
+        font-size: x-large;
     }
     </style>
 </head>
 <body>
   <div id="app">
-    <button v-if="!user" @click="login">Login with Google</button>
-    <button v-if="user" @click="logout">Logout</button>
-    <div v-if="user">
+    <button v-if="!user" @click="login" class="login">Login with Google</button>
+    <button v-if="user" @click="logout" class="logout">Logout</button>
+    <div v-if="user" class="userData">
       <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
-      <h3>{{ user.displayName }}</h3>
+      <h3 class="userName">{{ user.displayName }}</h3>
     </div>
     <transition name="fade" mode="out-in">
       <router-view></router-view>

@@ -74,12 +74,9 @@
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
-  <div id="app">
+  <div id="app" class="container mt-4">
     <div class="jumbotron">
       <div id="carousel" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-          <li data-target="#carousel" v-bind:data-slide-to="index" v-bind:class="{ active: index === 0 }" v-for="(image, index) in parcalki.images" :key="index"></li>
-        </ol>
         <div class="carousel-inner">
           <div class="carousel-item" v-bind:class="{ active: index === 0 }" v-for="(image, index) in parcalki.images" :key="index">
             <img class="d-block w-100" :src="image" alt="Slide Image">
@@ -94,56 +91,53 @@
           <span class="sr-only">Next</span>
         </a>
       </div>
-    </div>
-
-    <div class="container mt-4">
       <h1 class="display-4">{{ parcalki.title }}</h1>
       <p class="lead">{{ parcalki.description }}</p>
       <p>
         <span class="badge badge-danger">$ {{ parcalki.price }}</span>
       </p>
-
-      <h2>Categories</h2>
-      <div class="d-flex flex-wrap">
-        <span class="badge badge-primary m-1" v-for="category in parcalki.categories" :key="category">
-          {{ category }}
-        </span>
-      </div>
-
-      <h2>Tags</h2>
-      <div class="d-flex flex-wrap">
-        <span class="badge badge-secondary m-1" v-for="tag in parcalki.tags" :key="tag">
-          {{ tag }}
-        </span>
-      </div>
-
-      <h2>Sheree</h2>
-      <div class="d-flex flex-wrap">
-        <span class="badge badge-info m-1" v-for="person in parcalki.sheree" :key="person">
-          {{ person }}
-        </span>
-      </div>
-
-      <h2>Periods</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Period</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Person</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(period, index) in parcalki.periods" :key="index">
-            <td>{{ index }}</td>
-            <td>{{ period[0] }}</td>
-            <td>{{ period[1] }}</td>
-            <td>{{ period[2] }}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
+
+    <h2>Categories</h2>
+    <div class="d-flex flex-wrap">
+      <span class="badge badge-primary m-1" v-for="category in parcalki.categories" :key="category">
+        {{ category }}
+      </span>
+    </div>
+
+    <h2>Tags</h2>
+    <div class="d-flex flex-wrap">
+      <span class="badge badge-secondary m-1" v-for="tag in parcalki.tags" :key="tag">
+        {{ tag }}
+      </span>
+    </div>
+
+    <h2>Sheree</h2>
+    <div class="d-flex flex-wrap">
+      <span class="badge badge-info m-1" v-for="person in parcalki.sheree" :key="person">
+        {{ person }}
+      </span>
+    </div>
+
+    <h2>Periods</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Person</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(period, index) in parcalki.periods" :key="index">
+          <td>{{ index }}</td>
+          <td>{{ period[0] }}</td>
+          <td>{{ period[1] }}</td>
+          <td>{{ period[2] }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <script>

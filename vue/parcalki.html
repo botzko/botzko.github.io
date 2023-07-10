@@ -3,24 +3,43 @@
 <head>
   <title>Parcalki Visualization</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .jumbotron {
+      position: relative;
+      padding-top: 60px;
+      padding-bottom: 60px;
+      color: white;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .jumbotron .carousel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+
+    .jumbotron .carousel-item {
+      height: 100%;
+      opacity: 0.4;
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
   <div id="app" class="container mt-4">
     <div class="jumbotron">
-      <h1 class="display-4">{{ parcalki.title }}</h1>
-      <p class="lead">{{ parcalki.description }}</p>
-      <p>
-        <span class="badge badge-danger">$ {{ parcalki.price }}</span>
-      </p>
       <div id="carousel" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
           <li data-target="#carousel" v-bind:data-slide-to="index" v-bind:class="{ active: index === 0 }" v-for="(image, index) in parcalki.images" :key="index"></li>
         </ol>
         <div class="carousel-inner">
-          <div class="carousel-item" v-bind:class="{ active: index === 0 }" v-for="(image, index) in parcalki.images" :key="index">
-            <img class="d-block w-100" :src="image" alt="Slide Image">
-          </div>
+          <div class="carousel-item" v-bind:class="{ active: index === 0 }" v-for="(image, index) in parcalki.images" :key="index" :style="{ backgroundImage: 'url(' + image + ')' }"></div>
         </div>
         <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -31,6 +50,11 @@
           <span class="sr-only">Next</span>
         </a>
       </div>
+      <h1 class="display-4">{{ parcalki.title }}</h1>
+      <p class="lead">{{ parcalki.description }}</p>
+      <p>
+        <span class="badge badge-danger">$ {{ parcalki.price }}</span>
+      </p>
     </div>
 
     <h2>Categories</h2>
@@ -85,12 +109,12 @@
           description: 'Рокля на авокадота.',
           price: 254,
           images: [
-            'https://via.placeholder.com/800x400?text=Image+1',
-            'https://via.placeholder.com/800x400?text=Image+2',
-            'https://via.placeholder.com/800x400?text=Image+3'
+            'https://via.placeholder.com/1920x1080?text=Image+1',
+            'https://via.placeholder.com/1920x1080?text=Image+2',
+            'https://via.placeholder.com/1920x1080?text=Image+3'
           ],
           categories: ['Summer', 'Winter', 'Autumn'],
-          tags: ['Skirts', 'Scarfs', 'Snikers'],
+          tags: ['Skirts', 'Scarfs', 'Sneakers'],
           sheree: ['Kami', 'Magi', 'Maria'],
           periods: {
             1: ['28/07/23', '07/08/23', 'Kami'],

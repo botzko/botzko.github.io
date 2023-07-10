@@ -9,34 +9,9 @@
       padding-top: 60px;
       padding-bottom: 60px;
       color: white;
-      background: #000;
-      overflow: hidden;
-    }
-
-    .jumbotron .carousel {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: -1;
-    }
-
-    .jumbotron .carousel-item {
-      height: 100%;
-      opacity: 0.8;
       background-size: cover;
       background-position: center;
-    }
-
-    .jumbotron .carousel-item img {
-      display: none;
-    }
-
-    .jumbotron .carousel-item.active img {
-      display: block;
-      width: 100%;
-      height: auto;
+      overflow: hidden;
     }
 
     .jumbotron .display-4 {
@@ -56,63 +31,54 @@
 
     .badge-secondary {
       background-color: #6c757d;
+      color: white;
     }
 
     .badge-primary {
       background-color: #007bff;
+      color: white;
     }
 
     .badge-info {
       background-color: #17a2b8;
+      color: white;
     }
 
-    .carousel-control-prev,
-    .carousel-control-next {
-      width: 5%;
+    .badge-success {
+      background-color: #28a745;
+      color: white;
     }
 
-    .carousel {
-      width: 100%;
-      height: 100%;
+    .badge-danger {
+      background-color: #dc3545;
+      color: white;
     }
 
-    .carousel-inner {
-      width: 100%;
-      height: 100%;
+    .badge-warning {
+      background-color: #ffc107;
+      color: white;
     }
 
-    .carousel-item {
-      position: relative;
+    .badge-light {
+      background-color: #f8f9fa;
+      color: black;
     }
 
-    .carousel-item img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
+    .badge-dark {
+      background-color: #343a40;
+      color: white;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
   <div id="app">
-    <div class="jumbotron">
-      <div class="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item" v-bind:class="{ active: index === 0 }" v-for="(image, index) in parcalki.images" :key="index">
-            <img :src="image" alt="Slide Image">
-          </div>
-        </div>
-      </div>
+    <div class="jumbotron" :style="{ backgroundImage: `url(${currentImage})` }">
       <div class="container">
         <h1 class="display-4">{{ parcalki.title }}</h1>
         <p class="lead">{{ parcalki.description }}</p>
         <p>
-          <span class="badge badge-danger">$ {{ parcalki.price }}</span>
+          <span class="badge" :class="getRandomBadgeClass()">$ {{ parcalki.price }}</span>
         </p>
       </div>
     </div>
@@ -120,21 +86,21 @@
     <div class="container mt-4">
       <h2>Categories</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge badge-primary m-1" v-for="category in parcalki.categories" :key="category">
+        <span class="badge" :class="getRandomBadgeClass()" v-for="category in parcalki.categories" :key="category">
           {{ category }}
         </span>
       </div>
 
       <h2>Tags</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge badge-secondary m-1" v-for="tag in parcalki.tags" :key="tag">
+        <span class="badge" :class="getRandomBadgeClass()" v-for="tag in parcalki.tags" :key="tag">
           {{ tag }}
         </span>
       </div>
 
       <h2>Sheree</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge badge-info m-1" v-for="person in parcalki.sheree" :key="person">
+        <span class="badge" :class="getRandomBadgeClass()" v-for="person in parcalki.sheree" :key="person">
           {{ person }}
         </span>
       </div>
@@ -183,6 +149,33 @@
             2: ['08/08/23', '14/08/23', 'Magi'],
             3: ['28/10/23', '07/11/23', 'Maria'],
           },
+        },
+        currentImage: '',
+        imageIndex: 0,
+      },
+      mounted() {
+        this.startImageCarousel();
+      },
+      methods: {
+        getRandomBadgeClass: function() {
+          const classes = [
+            'badge-primary',
+            'badge-secondary',
+            'badge-success',
+            'badge-danger',
+            'badge-warning',
+            'badge-info',
+            'badge-light',
+            'badge-dark',
+          ];
+          const randomIndex = Math.floor(Math.random() * classes.length);
+          return classes[randomIndex];
+        },
+        startImageCarousel: function() {
+          setInterval(() => {
+            this.imageIndex = (this.imageIndex + 1) % this.parcalki.images.length;
+            this.currentImage = this.parcalki.images[this.imageIndex];
+          }, 5000);
         },
       },
     });

@@ -7,33 +7,53 @@
 </head>
 <body>
   <div id="app" class="container mt-4">
-    <h1>{{ parcalki.title }}</h1>
-    <p>{{ parcalki.description }}</p>
-    <p>Price: ${{ parcalki.price }}</p>
-    <h2>Images</h2>
-    <div class="row">
-      <div class="col-md-4" v-for="image in parcalki.images" :key="image">
-        <img :src="image" alt="Parcalki Image" class="img-fluid">
+    <div class="jumbotron">
+      <h1 class="display-4">{{ parcalki.title }}</h1>
+      <p class="lead">{{ parcalki.description }}</p>
+      <p>
+        <span class="badge badge-danger">$ {{ parcalki.price }}</span>
+      </p>
+      <div id="carousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carousel" v-bind:data-slide-to="index" v-bind:class="{ active: index === 0 }" v-for="(image, index) in parcalki.images" :key="index"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item" v-bind:class="{ active: index === 0 }" v-for="(image, index) in parcalki.images" :key="index">
+            <img class="d-block w-100" :src="image" alt="Slide Image">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
       </div>
     </div>
+
     <h2>Categories</h2>
-    <ul>
-      <li v-for="category in parcalki.categories" :key="category">
+    <div class="d-flex flex-wrap">
+      <span class="badge badge-primary m-1" v-for="category in parcalki.categories" :key="category">
         {{ category }}
-      </li>
-    </ul>
+      </span>
+    </div>
+
     <h2>Tags</h2>
-    <ul>
-      <li v-for="tag in parcalki.tags" :key="tag">
+    <div class="d-flex flex-wrap">
+      <span class="badge badge-secondary m-1" v-for="tag in parcalki.tags" :key="tag">
         {{ tag }}
-      </li>
-    </ul>
+      </span>
+    </div>
+
     <h2>Sheree</h2>
-    <ul>
-      <li v-for="person in parcalki.sheree" :key="person">
+    <div class="d-flex flex-wrap">
+      <span class="badge badge-info m-1" v-for="person in parcalki.sheree" :key="person">
         {{ person }}
-      </li>
-    </ul>
+      </span>
+    </div>
+
     <h2>Periods</h2>
     <table class="table">
       <thead>
@@ -64,7 +84,11 @@
           title: 'Някакво лятно парцалче!',
           description: 'Рокля на авокадота.',
           price: 254,
-          images: ['image1.jpg', 'image2.jpg', 'image3.jpg'],
+          images: [
+            'https://via.placeholder.com/800x400?text=Image+1',
+            'https://via.placeholder.com/800x400?text=Image+2',
+            'https://via.placeholder.com/800x400?text=Image+3'
+          ],
           categories: ['Summer', 'Winter', 'Autumn'],
           tags: ['Skirts', 'Scarfs', 'Snikers'],
           sheree: ['Kami', 'Magi', 'Maria'],

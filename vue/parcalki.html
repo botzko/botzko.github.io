@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Parcalki Visualization</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>{{ parcalki.title }}</h1>
+    <p>{{ parcalki.description }}</p>
+    <p>Price: ${{ parcalki.price }}</p>
+    <h2>Images</h2>
+    <ul>
+      <li v-for="image in parcalki.images" :key="image">
+        <img :src="image" alt="Parcalki Image">
+      </li>
+    </ul>
+    <h2>Categories</h2>
+    <ul>
+      <li v-for="category in parcalki.categories" :key="category">
+        {{ category }}
+      </li>
+    </ul>
+    <h2>Tags</h2>
+    <ul>
+      <li v-for="tag in parcalki.tags" :key="tag">
+        {{ tag }}
+      </li>
+    </ul>
+    <h2>Sheree</h2>
+    <ul>
+      <li v-for="person in parcalki.sheree" :key="person">
+        {{ person }}
+      </li>
+    </ul>
+    <h2>Periods</h2>
+    <table>
+      <tr>
+        <th>Period</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Person</th>
+      </tr>
+      <tr v-for="(period, index) in parcalki.periods" :key="index">
+        <td>{{ index }}</td>
+        <td>{{ period[0] }}</td>
+        <td>{{ period[1] }}</td>
+        <td>{{ period[2] }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        parcalki: {
+          id: 1,
+          title: 'Някакво лятно парцалче!',
+          description: 'Рокля на авокадота.',
+          price: 254,
+          images: ['image1.jpg', 'image2.jpg', 'image3.jpg'],
+          categories: ['Summer', 'Winter', 'Autumn'],
+          tags: ['Skirts', 'Scarfs', 'Snikers'],
+          sheree: ['Kami', 'Magi', 'Maria'],
+          periods: {
+            1: ['28/07/23', '07/08/23', 'Kami'],
+            2: ['08/08/23', '14/08/23', 'Magi'],
+            3: ['28/10/23', '07/11/23', 'Maria'],
+          },
+        },
+      },
+    });
+  </script>
+</body>
+</html>

@@ -46,9 +46,9 @@
     <div class="container mt-4">
       <h2>Categories</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge badge-danger m-1" v-if="parcalki.categories.length > 0">{{ parcalki.categories[0] }}</span>
-        <span class="badge badge-warning m-1" v-if="parcalki.categories.length > 1">{{ parcalki.categories[1] }}</span>
-        <span class="badge badge-success m-1" v-if="parcalki.categories.length > 2">{{ parcalki.categories[2] }}</span>
+        <span class="badge badge-danger m-1" v-for="category in parcalki.categories" :key="category">
+          {{ category }}
+        </span>
       </div>
 
       <h2>Tags</h2>
@@ -97,9 +97,9 @@
           description: 'Рокля на авокадота.',
           price: 254,
           images: [
-            'https://via.placeholder.com/800x600/c0c0c0?text=Fashion+Girl+1',
-            'https://via.placeholder.com/800x600/c0c0c0?text=Fashion+Girl+2',
-            'https://via.placeholder.com/800x600/c0c0c0?text=Fashion+Girl+3'
+            'https://picsum.photos/800/600',
+            'https://picsum.photos/800/600',
+            'https://picsum.photos/800/600',
           ],
           categories: ['Summer', 'Winter', 'Autumn'],
           tags: ['Skirts', 'Scarfs', 'Sneakers'],
@@ -116,7 +116,7 @@
         this.startImageCarousel();
       },
       methods: {
-        startImageCarousel: function() {
+        startImageCarousel() {
           setInterval(() => {
             this.imageIndex = (this.imageIndex + 1) % this.parcalki.images.length;
           }, 5000);

@@ -29,18 +29,13 @@
       font-size: 2.5rem;
     }
 
-    .badge-secondary {
-      background-color: #6c757d;
-      color: white;
-    }
-
     .badge-primary {
       background-color: #007bff;
       color: white;
     }
 
-    .badge-info {
-      background-color: #17a2b8;
+    .badge-secondary {
+      background-color: #6c757d;
       color: white;
     }
 
@@ -49,13 +44,18 @@
       color: white;
     }
 
+    .badge-warning {
+      background-color: #ffc107;
+      color: white;
+    }
+
     .badge-danger {
       background-color: #dc3545;
       color: white;
     }
 
-    .badge-warning {
-      background-color: #ffc107;
+    .badge-info {
+      background-color: #17a2b8;
       color: white;
     }
 
@@ -86,21 +86,21 @@
     <div class="container mt-4">
       <h2>Categories</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge" :class="getRandomBadgeClass()" v-for="category in parcalki.categories" :key="category">
-          {{ category }}
-        </span>
+        <span class="badge badge-danger m-1" v-if="parcalki.categories.length > 0">{{ parcalki.categories[0] }}</span>
+        <span class="badge badge-warning m-1" v-if="parcalki.categories.length > 1">{{ parcalki.categories[1] }}</span>
+        <span class="badge badge-success m-1" v-if="parcalki.categories.length > 2">{{ parcalki.categories[2] }}</span>
       </div>
 
       <h2>Tags</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge" :class="getRandomBadgeClass()" v-for="tag in parcalki.tags" :key="tag">
+        <span class="badge badge-secondary m-1" v-for="tag in parcalki.tags" :key="tag">
           {{ tag }}
         </span>
       </div>
 
       <h2>Sheree</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge" :class="getRandomBadgeClass()" v-for="person in parcalki.sheree" :key="person">
+        <span class="badge badge-info m-1" v-for="person in parcalki.sheree" :key="person">
           {{ person }}
         </span>
       </div>
@@ -156,19 +156,6 @@
         this.startImageCarousel();
       },
       methods: {
-        getRandomBadgeClass: function() {
-          const classes = [
-            'badge-primary',
-            'badge-secondary',
-            'badge-success',
-            'badge-warning',
-            'badge-info',
-            'badge-light',
-            'badge-dark',
-          ];
-          const randomIndex = Math.floor(Math.random() * classes.length);
-          return classes[randomIndex];
-        },
         startImageCarousel: function() {
           setInterval(() => {
             this.imageIndex = (this.imageIndex + 1) % this.parcalki.images.length;

@@ -73,12 +73,12 @@
 </head>
 <body>
   <div id="app">
-    <div class="jumbotron" :style="{ backgroundImage: `url(${currentImage})` }">
+    <div class="jumbotron" :style="{ backgroundImage: `url(${parcalki.images[imageIndex]})` }">
       <div class="container">
         <h1 class="display-4">{{ parcalki.title }}</h1>
         <p class="lead">{{ parcalki.description }}</p>
         <p>
-          <span class="badge" :class="getRandomBadgeClass()">$ {{ parcalki.price }}</span>
+          <span class="badge badge-danger">$ {{ parcalki.price }}</span>
         </p>
       </div>
     </div>
@@ -150,7 +150,6 @@
             3: ['28/10/23', '07/11/23', 'Maria'],
           },
         },
-        currentImage: '',
         imageIndex: 0,
       },
       mounted() {
@@ -162,7 +161,6 @@
             'badge-primary',
             'badge-secondary',
             'badge-success',
-            'badge-danger',
             'badge-warning',
             'badge-info',
             'badge-light',
@@ -174,7 +172,6 @@
         startImageCarousel: function() {
           setInterval(() => {
             this.imageIndex = (this.imageIndex + 1) % this.parcalki.images.length;
-            this.currentImage = this.parcalki.images[this.imageIndex];
           }, 5000);
         },
       },

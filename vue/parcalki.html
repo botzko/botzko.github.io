@@ -28,46 +28,6 @@
     .jumbotron .badge {
       font-size: 2.5rem;
     }
-
-    .badge-primary {
-      background-color: #007bff;
-      color: white;
-    }
-
-    .badge-secondary {
-      background-color: #6c757d;
-      color: white;
-    }
-
-    .badge-success {
-      background-color: #28a745;
-      color: white;
-    }
-
-    .badge-warning {
-      background-color: #ffc107;
-      color: white;
-    }
-
-    .badge-danger {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    .badge-info {
-      background-color: #17a2b8;
-      color: white;
-    }
-
-    .badge-light {
-      background-color: #f8f9fa;
-      color: black;
-    }
-
-    .badge-dark {
-      background-color: #343a40;
-      color: white;
-    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
@@ -93,14 +53,14 @@
 
       <h2>Tags</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge badge-secondary m-1" v-for="tag in parcalki.tags" :key="tag">
+        <span class="badge badge-danger m-1" v-for="tag in parcalki.tags" :key="tag">
           {{ tag }}
         </span>
       </div>
 
       <h2>Sheree</h2>
       <div class="d-flex flex-wrap">
-        <span class="badge badge-info m-1" v-for="person in parcalki.sheree" :key="person">
+        <span class="badge badge-danger m-1" v-for="person in parcalki.sheree" :key="person">
           {{ person }}
         </span>
       </div>

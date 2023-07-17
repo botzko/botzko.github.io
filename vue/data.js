@@ -13,3 +13,6 @@ let parcalki = {
         3 : ["28/10/23", "07/11/23", "Maria"],
     }
 };
+let kiflichki = {
+    id : "as34-34ds-43ff"
+};

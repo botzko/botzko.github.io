@@ -72,7 +72,7 @@
     <div v-if="user" class="userData">
       <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
       <h3 class="userName">{{ user.displayName }}</h3>
-      <h3 class="userName">{{ user.uid }}</h3>
+      <!--<h3 class="userName">{{ user.uid }}</h3>  -->
     </div>
     <transition name="fade" mode="out-in">
       <router-view></router-view>

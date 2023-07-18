@@ -72,7 +72,6 @@
     <div v-if="user" class="userData">
       <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
       <h3 class="userName">{{ user.displayName }}</h3>
-      <!--<h3 class="userName">{{ user.uid }}</h3>  -->
     </div>
     <!--  
     <transition name="fade" mode="out-in">
@@ -107,10 +106,12 @@
       template: `<div class="dashboard"></div>`
     };
     var UserArea = {
-      template: `<div class="UserArea">
-        <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
-        <h3 class="userName">{{ user.displayName }}</h3>
-        <button v-if="user" @click="logout" class="logout">Logout</button>
+      template: `
+        <div class="UserArea">
+          <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
+          <h3 class="userName">{{ user.displayName }}</h3>
+          <p class="userName">{{ user.uid }}</p>
+          <button v-if="user" @click="logout" class="logout">Logout</button>
         </div>`
     };
 

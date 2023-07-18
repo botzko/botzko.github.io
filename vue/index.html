@@ -69,7 +69,6 @@
 <body>
   <div id="app">
     <button v-if="!user" @click="login" class="login">Login with Google</button>
-    <button v-if="user" @click="logout" class="logout">Logout</button>
     <div v-if="user" class="userData">
       <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
       <h3 class="userName">{{ user.displayName }}</h3>
@@ -107,11 +106,19 @@
     var Dashboard = {
       template: `<div class="dashboard"></div>`
     };
+    var UserArea = {
+      template: `<div class="UserArea">
+        <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
+        <h3 class="userName">{{ user.displayName }}</h3>
+        <button v-if="user" @click="logout" class="logout">Logout</button>
+        </div>`
+    };
 
     var router = new VueRouter({
       routes: [
         { path: '/', component: Home },
-        { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } }
+        { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
+        { path: '/user', component: UserArea, meta: { requiresAuth: true } }
       ]
     });
 

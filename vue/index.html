@@ -69,10 +69,7 @@
 <body>
   <div id="app">
     <button v-if="!user" @click="login" class="login">Login with Google</button>
-    <div v-if="user" class="userData">
-      <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
-      <h3 class="userName">{{ user.displayName }}</h3>
-    </div>
+
     <!-- 
     <transition name="fade" mode="out-in">
       <router-view></router-view>
@@ -103,7 +100,10 @@
     };
 
     var Dashboard = {
-      template: `<div class="dashboard"></div>`
+      template: `    <div v-if="user" class="userData">
+      <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
+      <h3 class="userName">{{ user.displayName }}</h3>
+    </div>`
     };
     var UserArea = {
       template: `

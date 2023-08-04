@@ -12,11 +12,12 @@
     <router-view></router-view>
   </div>
 
-  <!-- Load Vue.js from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-
-  <!-- Load Vue Router from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.2/dist/vue-router.js"></script>
+  <script type="importmap">
+    { "imports": {
+        "vue":        "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.41/vue.esm-browser.prod.js",
+        "vue-router": "https://cdnjs.cloudflare.com/ajax/libs/vue-router/4.1.5/vue-router.esm-browser.min.js"
+    } }
+  </script>  
 
   <!-- Load the Vue Router template from CDN -->
   <script src="router-template.js" type="module"></script>

@@ -5,6 +5,7 @@
   <script src="https://unpkg.com/vue@2.6.14"></script>
   <script src="https://unpkg.com/vue-router@3.5.2"></script>
   <!-- meta name="viewport"   content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"-->
+  <link rel="stylesheet" href="style.css">
   <style>
     body{
         margin: 0px;
@@ -103,7 +104,45 @@
     };
 
     var Dashboard = {
-      template: `<div class="dashboard">Лет ме си</div>`
+      template: `
+      <div class="container">
+        <section class="header">
+            <div class="board">
+                <div class="image"><img :src="user.photoURL" class="profile-picture" alt="Profile Picture"></div>
+                
+                <h2>{{ user.displayName }}</h2>
+                
+                <div class="row">
+                    <div class="column">
+                        <h2>shared</h2>
+                        <p>23</p>
+                    </div>
+                    <div class="column">
+                        <h2>wished</h2>
+                        <p>78</p>
+                    </div>
+                    <div class="column">
+                        <h2>friends</h2>
+                        <p>15</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    <footer class="sticky-footer">
+        <a href="index.html"><i class="material-icons md-24 ">home</i></a>
+        <a href="shered.html"><i class="material-icons md-24">share</i></a>
+        <i class="material-icons md-24"></i>
+        <i class="material-icons md-24">favorite</i>
+        <i class="material-icons md-24">search</i>
+    </footer>
+    </div>
+      
+        <div class="UserArea">
+          <img :src="user.photoURL" class="profile-picture" alt="Profile Picture">
+          <h3 class="userName">{{ user.displayName }}</h3>
+          <p class="userName">{{ user.uid }}</p>
+          <button v-if="user" @click="logout" class="logout">Logout</button>
+        </div>`
     };
     var UserArea = {
       template: `

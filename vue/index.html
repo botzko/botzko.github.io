@@ -108,7 +108,7 @@
       <div class="container">
         <section class="header">
             <div class="board">
-                <div class="image"><img :src="user.photoURL" class="profile-picture" alt="Profile Picture"></div>
+                <div class="image"><img :src=require(user.photoURL) class="profile-picture" alt="Profile Picture"></div>
                 
                 <h2>{{ user.displayName }}</h2>
                 

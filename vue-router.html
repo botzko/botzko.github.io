@@ -159,18 +159,6 @@ a, a:visited{
   <script>
     const Home = {
       template: `
-      <h2>Home Page</h2>
-      <p>This is the Home page</p>`
-    };
-
-    const About = {
-      template: `
-      <h2>About Page</h2>
-      <p>This is the About page</p>
-      `
-    };
-    const News = {
-      template: `
       <div class="container">
         <section class="header">
             <div class="board">
@@ -194,8 +182,29 @@ a, a:visited{
                 </div>
             </div>
         </section>
-    
-    </div>
+      </div>
+      `
+    };
+
+    const About = {
+      template: `
+      <h2>About Page</h2>
+      <p>This is the About page</p>
+      `
+    };
+    const News = {
+      template: `
+      <div class="container">
+        <section class="header">
+            <div class="card">
+                <div class="content">
+                    <h2>The new Dress</h2>
+                    <p>The new Dress</p>
+                </div>
+                <div class="visual"><img src="dress.jpg" alt="Profile Picture" class="element-picture"></div>
+            </div>
+        </section>
+      </div>
       `
     };
     // Configure routes

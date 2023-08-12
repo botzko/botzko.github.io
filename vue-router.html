@@ -7,6 +7,9 @@
   <title>Vue Router Example</title>
   <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-router@3.5.2/dist/vue-router.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <style>
 .fade-enter-active,
 .fade-leave-active {
@@ -150,7 +153,6 @@ a, a:visited{
   </div>
 
   <script>
-    // Define components
     const Home = {
       template: `
       <h2>Home Page</h2>
@@ -190,6 +192,7 @@ a, a:visited{
         </section>
     <footer class="sticky-footer">
         <a href="index.html"><i class="material-icons md-24 ">home</i></a>
+        <router-link to="/news"><i class="material-icons md-24 ">home</i></router-link>
         <a href="shered.html"><i class="material-icons md-24">share</i></a>
         <i class="material-icons md-24"></i>
         <i class="material-icons md-24">favorite</i>

@@ -149,7 +149,7 @@ a, a:visited{
     </transition>
     <footer class="sticky-footer">
       <router-link to="/"><i class="material-icons md-24 ">home</i></router-link>
-      <router-link to="/about"><i class="material-icons md-24 ">share</i></router-link>
+      <router-link to="/shered"><i class="material-icons md-24 ">share</i></router-link>
       <i class="material-icons md-24"></i>
       <router-link to="/about"><i class="material-icons md-24">favorite</i></router-link>
       <router-link to="/news"><i class="material-icons md-24">search</i></router-link>
@@ -192,6 +192,21 @@ a, a:visited{
       <p>This is the About page</p>
       `
     };
+    const Shered = {
+      template: `
+      <div class="container">
+        <section class="header">
+            <div class="card">
+                <div class="content">
+                    <h2>The new Dress</h2>
+                    <p>The new Dress</p>
+                </div>
+                <div class="visual"><img src="dress.jpg" alt="Profile Picture" class="element-picture"></div>
+            </div>
+        </section>
+      </div>
+      `
+    };
     const News = {
       template: `
       <div class="container">
@@ -210,6 +225,7 @@ a, a:visited{
     // Configure routes
     const routes = [
       { path: '/', component: Home },
+      { path: '/shered', component: Shered },
       { path: '/about', component: About },
       { path: '/news', component: News }
     ];

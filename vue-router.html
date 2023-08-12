@@ -150,6 +150,13 @@ a, a:visited{
     <transition name="fade" mode="out-in">
         <router-view></router-view>
     </transition>
+    <footer class="sticky-footer">
+      <router-link to="/"><i class="material-icons md-24 ">home</i></router-link>
+      <router-link to="/about"><i class="material-icons md-24 ">share</i></router-link>
+      <i class="material-icons md-24"></i>
+      <i class="material-icons md-24">favorite</i>
+      <i class="material-icons md-24">search</i>
+  </footer>
   </div>
 
   <script>
@@ -190,13 +197,7 @@ a, a:visited{
                 </div>
             </div>
         </section>
-    <footer class="sticky-footer">
-        <router-link to="/"><i class="material-icons md-24 ">home</i></router-link>
-        <router-link to="/about"><i class="material-icons md-24 ">share</i></router-link>
-        <i class="material-icons md-24"></i>
-        <i class="material-icons md-24">favorite</i>
-        <i class="material-icons md-24">search</i>
-    </footer>
+    
     </div>
       `
     };

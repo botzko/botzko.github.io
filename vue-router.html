@@ -150,7 +150,7 @@ a, a:visited{
       <router-link to="/"><i class="material-icons md-24 ">home</i></router-link>
       <router-link to="/shered"><i class="material-icons md-24 ">share</i></router-link>
       <i class="material-icons md-24"></i>
-      <router-link to="/about"><i class="material-icons md-24">favorite</i></router-link>
+      <router-link to="/wished"><i class="material-icons md-24">favorite</i></router-link>
       <router-link to="/news"><i class="material-icons md-24">search</i></router-link>
   </footer>
   </div>
@@ -184,10 +184,10 @@ a, a:visited{
       `
     };
 
-    const About = {
+    const Wished = {
       template: `
-      <h2>About Page</h2>
-      <p>This is the About page</p>
+      <h2>Wished Page</h2>
+      <p>This is the Wished page</p>
       `
     };
     const Shered = {
@@ -224,7 +224,7 @@ a, a:visited{
     const routes = [
       { path: '/', component: Home },
       { path: '/shered', component: Shered },
-      { path: '/about', component: About },
+      { path: '/wished', component: Wished },
       { path: '/news', component: News }
     ];
 

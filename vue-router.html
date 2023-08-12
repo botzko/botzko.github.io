@@ -151,7 +151,7 @@ a, a:visited{
       <router-link to="/shered"><i class="material-icons md-24 ">share</i></router-link>
       <i class="material-icons md-24"></i>
       <router-link to="/wished"><i class="material-icons md-24">favorite</i></router-link>
-      <router-link to="/news"><i class="material-icons md-24">search</i></router-link>
+      <router-link to="/search"><i class="material-icons md-24">search</i></router-link>
   </footer>
   </div>
   <script>
@@ -205,7 +205,7 @@ a, a:visited{
       </div>
       `
     };
-    const News = {
+    const Search = {
       template: `
       <div class="container">
         <section class="header">
@@ -225,7 +225,7 @@ a, a:visited{
       { path: '/', component: Home },
       { path: '/shered', component: Shered },
       { path: '/wished', component: Wished },
-      { path: '/news', component: News }
+      { path: '/search', component: Search }
     ];
 
     // Create router instance

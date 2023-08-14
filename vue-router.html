@@ -11,15 +11,43 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
+     /* Transitions */
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity 0.5s;
+      }
 
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
+      .fade-enter,
+      .fade-leave-to {
+        opacity: 0;
+      }
+      .slide-enter-active,
+      .slide-leave-active {
+        transition: all 0.75s ease-out;
+      }
+
+      .slide-enter-to {
+        position: absolute;
+        right: 0;
+      }
+
+      .slide-enter-from {
+        position: absolute;
+        right: -100%;
+      }
+
+      .slide-leave-to {
+        position: absolute;
+        left: -100%;
+      }
+
+      .slide-leave-from {
+        position: absolute;
+        left: 0;
+      }
+
+
+
 * {
     margin: 0;
     padding: 0;
@@ -150,7 +178,8 @@ a, a:visited{
 </head>
 <body>
   <div id="app">
-    <transition name="fade" mode="out-in">
+    <!--transition name="fade" mode="out-in"-->
+    <transition name="slide">
         <router-view></router-view>
     </transition>
     

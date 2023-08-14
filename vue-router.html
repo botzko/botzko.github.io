@@ -21,6 +21,12 @@
       .fade-leave-to {
         opacity: 0;
       }
+      .slide-enter-active, .slide-leave-active {
+        transition: transform 0.5s;
+      }
+      .slide-enter, .slide-leave-to {
+        transform: translateX(100%);
+      }
 
 * {
     margin: 0;
@@ -152,7 +158,7 @@ a, a:visited{
 </head>
 <body>
   <div id="app">
-    <transition name="fade" mode="out-in">
+    <transition name="slide">
         <router-view></router-view>
     </transition>
     

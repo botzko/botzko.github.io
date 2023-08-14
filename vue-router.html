@@ -21,60 +21,26 @@
       .fade-leave-to {
         opacity: 0;
       }
-      .slide-enter-active,
-      .slide-leave-active {
-        transition: all 0.75s ease-out;
+      .slide-left-enter-active,
+      .slide-left-leave-active,
+      .slide-right-enter-active,
+      .slide-right-leave-active {
+        transition-duration: 0.5s;
+        transition-property: height, opacity, transform;
+        transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+        overflow: hidden;
       }
 
-      .slide-enter-to {
-        position: absolute;
-        right: 0;
-      }
-
-      .slide-enter-from {
-        position: absolute;
-        right: -100%;
-      }
-
-      .slide-leave-to {
-        position: absolute;
-        left: -100%;
-      }
-
-      .slide-leave-from {
-        position: absolute;
-        left: 0;
-      }
-      .scale-enter-active,
-      .scale-leave-active {
-        transition: all 0.5s ease;
-      }
-
-      .scale-enter-from,
-      .scale-leave-to {
+      .slide-left-enter,
+      .slide-right-leave-active {
         opacity: 0;
-        transform: scale(0.9);
-      }
-      .scale-slide-enter-active,
-      .scale-slide-leave-active {
-        position: absolute;
-        transition: all 0.85s ease;
+        transform: translate(2em, 0);
       }
 
-      .scale-slide-enter-from {
-        left: -100%;
-      }
-
-      .scale-slide-enter-to {
-        left: 0%;
-      }
-
-      .scale-slide-leave-from {
-        transform: scale(1);
-      }
-
-      .scale-slide-leave-to {
-        transform: scale(0.8);
+      .slide-left-leave-active,
+      .slide-right-enter {
+        opacity: 0;
+        transform: translate(-2em, 0);
       }
 
 * {
@@ -208,7 +174,7 @@ a, a:visited{
 <body>
   <div id="app">
     <!--transition name="fade" mode="out-in"-->
-    <transition name="scale-slide">
+    <transition name="slide-right">
         <router-view></router-view>
     </transition>
     

@@ -164,10 +164,15 @@ a, a:visited{
 </head>
 <body>
   <div id="app">
-    <!--transition name="fade" mode="out-in"-->
+    <!--transition name="fade" mode="out-in">
     <transition name="route" mode="out-in" appear>
         <router-view></router-view>
-    </transition>
+    </transition-->
+    <router-view v-slot="{ Component }">
+      <transition name="route" mode="out-in" appear>
+        <component :is="Component" />
+      </transition>
+    </router-view>
     
     <footer class="sticky-footer">
       <router-link to="/"><i class="material-icons md-24 ">home</i></router-link>

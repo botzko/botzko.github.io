@@ -21,26 +21,17 @@
       .fade-leave-to {
         opacity: 0;
       }
-      .slide-left-enter-active,
-      .slide-left-leave-active,
-      .slide-right-enter-active,
-      .slide-right-leave-active {
-        transition-duration: 0.5s;
-        transition-property: height, opacity, transform;
-        transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
-        overflow: hidden;
-      }
-
-      .slide-left-enter,
-      .slide-right-leave-active {
+      .route-enter-from {
         opacity: 0;
-        transform: translate(2em, 0);
+        transform: translateY(100px)
       }
-
-      .slide-left-leave-active,
-      .slide-right-enter {
+      .route-enter-active,
+      .route-leave-active {
+        transition: all .2s ease-out
+      }
+      .route-leave-to {
         opacity: 0;
-        transform: translate(-2em, 0);
+        transform: translateY(100px)
       }
 
 * {
@@ -174,7 +165,7 @@ a, a:visited{
 <body>
   <div id="app">
     <!--transition name="fade" mode="out-in"-->
-    <transition name="slide-right">
+    <transition name="route" mode="out-in" appear>
         <router-view></router-view>
     </transition>
     

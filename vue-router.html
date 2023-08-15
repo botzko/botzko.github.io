@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <style>
-     /* Transitions */
-      .fade-enter-active,
+    /* Transitions */
+    .fade-enter-active,
       .fade-leave-active {
         transition: opacity 0.5s;
       }
@@ -21,16 +21,6 @@
       .fade-leave-to {
         opacity: 0;
       }
-      .nested-enter-active .inner,
-.nested-leave-active .inner {
-  transition: all 0.3s ease-in-out;
-}
-
-.nested-enter-from .inner,
-.nested-leave-to .inner {
-  transform: translateX(30px);
-  opacity: 0;
-}
 * {
     margin: 0;
     padding: 0;
@@ -161,8 +151,8 @@ a, a:visited{
 </head>
 <body>
   <div id="app">
-    <transition name="nested">
-        <router-view></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
     </transition>
     
     <footer class="sticky-footer">

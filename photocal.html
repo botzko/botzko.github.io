@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photography Calendar</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #FFE4B5; /* PapayaWhip */
+        }
+        table {
+            background-color: #FFF8DC; /* Cornsilk */
+        }
+        th {
+            background-color: #D2B48C; /* Tan */
+        }
+        .cell-image {
+            display: none;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Photography Calendar</h1>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Month</th>
+                    <th>Week 1</th>
+                    <th>Week 2</th>
+                    <th>Week 3</th>
+                    <th>Week 4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>January</td>
+                    <td class="cell" data-image-url="https://source.unsplash.com/random/1">Winter Landscapes, Snowy Scenes</td>
+                    <td>Indoor Lifestyle, Cozy Moments</td>
+                    <td>Winter Sports, Active Lifestyle</td>
+                    <td>Snowy Scenes, Winter Activities</td>
+                </tr>
+                <tr>
+                    <td>February</td>
+                    <td>Valentine's Day, Love and Romance</td>
+                    <td>Winter Sports, Active Lifestyle</td>
+                    <td>Romantic Getaways, Couples</td>
+                    <td>Love and Romance Themes</td>
+                </tr>
+                <tr>
+                    <td>March</td>
+                    <td>Spring Blooms, Flowers</td>
+                    <td>St. Patrick's Day, Green Themes</td>
+                    <td>Outdoor Activities, Sports</td>
+                    <td>Easter Decorations, Celebrations</td>
+                </tr>
+                <tr>
+                    <td>April</td>
+                    <td>Outdoor Activities, Sports</td>
+                    <td>Easter Decorations, Celebrations</td>
+                    <td>Spring Travel, Vacation Destinations</td>
+                    <td>Blooming Flowers, Family Moments</td>
+                </tr>
+                <tr>
+                    <td>May</td>
+                    <td>Spring Travel, Vacation Destinations</td>
+                    <td>Mother's Day, Family Portraits</td>
+                    <td>Outdoor Activities, Sports</td>
+                    <td>Graduations, Achievement Moments</td>
+                </tr>
+                <tr>
+                    <td>June</td>
+                    <td>Summer Vibes, Beach Scenes</td>
+                    <td>Graduations, Achievement Moments</td>
+                    <td>Summer Vacation, Travel Photography</td>
+                    <td>Beach Scenes, Outdoor Activities</td>
+                </tr>
+                <tr>
+                    <td>July</td>
+                    <td>Summer Vacation, Travel Photography</td>
+                    <td>Fourth of July, Patriotic Themes</td>
+                    <td>Summer Fun, Water Activities</td>
+                    <td>Beach Scenes, Travel Adventures</td>
+                </tr>
+                <tr>
+                    <td>August</td>
+                    <td>Summer Fun, Water Activities</td>
+                    <td>Beach Scenes, Travel Adventures</td>
+                    <td>International Friendship Day</td>
+                    <td>Lifestyle at the Beach</td>
+                </tr>
+                <tr>
+                    <td>September</td>
+                    <td>Back to School, Education Themes</td>
+                    <td>Labor Day, Work and Industry</td>
+                    <td>Autumn Preparations, Fall Themes</td>
+                    <td>Cozy Indoor Moments</td>
+                </tr>
+                <tr>
+                    <td>October</td>
+                    <td>Fall Foliage, Colorful Landscapes</td>
+                    <td>Halloween, Spooky and Fun</td>
+                    <td>Thanksgiving Preparations</td>
+                    <td>Pumpkin Patches, Harvest Moments</td>
+                </tr>
+                <tr>
+                    <td>November</td>
+                    <td>Thanksgiving Preparations</td>
+                    <td>Autumn Harvest, Food Photography</td>
+                    <td>Cozy Indoor Moments</td>
+                    <td>Thanksgiving Celebrations</td>
+                </tr>
+                <tr>
+                    <td>December</td>
+                    <td>Christmas Decorations, Festive Themes</td>
+                    <td>New Year's Eve, Celebration</td>
+                    <td>Winter Wonderland, Snowy Scenes</td>
+                    <td>Christmas Festivities, Joyful Moments</td>
+                </tr>
+                <tr>
+                    <td>Throughout the Year</td>
+                    <td>Consistently Capture: Nature, Technology, People, and more</td>
+                    <td>Stay Updated with Trends and Social Media Themes</td>
+                    <td>Consistently Capture: Stock Photos in Various Categories</td>
+                    <td>Consistently Capture: Seasonal Themes and Celebrations</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const cells = document.querySelectorAll('.cell');
+
+        cells.forEach(cell => {
+            cell.addEventListener('mouseover', () => {
+                const imageUrl = cell.getAttribute('data-image-url');
+                const cellImage = document.createElement('img');
+                cellImage.src = imageUrl;
+                cellImage.classList.add('cell-image');
+                cell.appendChild(cellImage);
+                cell.style.display = 'none';
+            });
+
+            cell.addEventListener('mouseout', () => {
+                const cellImage = cell.querySelector('.cell-image');
+                if (cellImage) {
+                    cellImage.remove();
+                }
+                cell.style.display = 'table-cell';
+            });
+        });
+    </script>
+</body>
+</html>

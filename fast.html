@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fasting Tracker</title>
+    <style>
+        /* Add your CSS styles here for formatting */
+    </style>
+</head>
+<body>
+    <h1>Fasting Tracker</h1>
+    <label for="fast-start">Start a new fasting period:</label>
+    <input type="datetime-local" id="fast-start">
+    <button onclick="startFasting()">Start Fast</button>
+
+    <h2>Records:</h2>
+    <ul id="records-list"></ul>
+
+    <script>
+        const recordsList = document.getElementById('records-list');
+
+        // Function to start a new fasting period
+        function startFasting() {
+            const startTime = new Date().toLocaleString();
+            const fastingEntry = { start: startTime };
+            const fastingEntries = JSON.parse(localStorage.getItem('fastingEntries')) || [];
+            fastingEntries.push(fastingEntry);
+            localStorage.setItem('fastingEntries', JSON.stringify(fastingEntries));
+            updateRecordsList();
+        }
+
+        // Function to update the records list
+        function updateRecordsList() {
+            recordsList.innerHTML = '';
+            const fastingEntries = JSON.parse(localStorage.getItem('fastingEntries')) || [];
+
+            for (const entry of fastingEntries) {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Started: ${entry.start}`;
+                recordsList.appendChild(listItem);
+            }
+        }
+
+        // Initialize the records list
+        updateRecordsList();
+    </script>
+</body>
+</html>

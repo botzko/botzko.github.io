@@ -10,9 +10,11 @@
 </head>
 <body>
     <h1>Fasting Tracker</h1>
-    <label for="fast-start">Start a new fasting period:</label>
+    <label for="fast-start">Start fasting:</label>
     <input type="datetime-local" id="fast-start">
-    <button onclick="startFasting()">Start Fast</button>
+    <label for="fast-end">End fasting:</label>
+    <input type="datetime-local" id="fast-end">
+    <button onclick="addFastingRecord()">Add Record</button>
 
     <h2>Records:</h2>
     <ul id="records-list"></ul>
@@ -20,10 +22,17 @@
     <script>
         const recordsList = document.getElementById('records-list');
 
-        // Function to start a new fasting period
-        function startFasting() {
-            const startTime = new Date().toLocaleString();
-            const fastingEntry = { start: startTime };
+        // Function to add a new fasting record
+        function addFastingRecord() {
+            const startTime = document.getElementById('fast-start').value;
+            const endTime = document.getElementById('fast-end').value;
+
+            if (!startTime || !endTime) {
+                alert("Please select both start and end times.");
+                return;
+            }
+
+            const fastingEntry = { start: startTime, end: endTime };
             const fastingEntries = JSON.parse(localStorage.getItem('fastingEntries')) || [];
             fastingEntries.push(fastingEntry);
             localStorage.setItem('fastingEntries', JSON.stringify(fastingEntries));
@@ -37,7 +46,7 @@
 
             for (const entry of fastingEntries) {
                 const listItem = document.createElement('li');
-                listItem.textContent = `Started: ${entry.start}`;
+                listItem.textContent = `Started: ${entry.start}, Ended: ${entry.end}`;
                 recordsList.appendChild(listItem);
             }
         }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 5px;
+  }
+
+  .cell {
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    font-size: 36px;
+    border: 2px solid #333;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<h1>Stunning Tic-Tac-Toe</h1>
+
+<div class="board" id="board">
+  <div class="cell" onclick="makeMove(0,0)"></div>
+  <div class="cell" onclick="makeMove(0,1)"></div>
+  <div class="cell" onclick="makeMove(0,2)"></div>
+  <div class="cell" onclick="makeMove(1,0)"></div>
+  <div class="cell" onclick="makeMove(1,1)"></div>
+  <div class="cell" onclick="makeMove(1,2)"></div>
+  <div class="cell" onclick="makeMove(2,0)"></div>
+  <div class="cell" onclick="makeMove(2,1)"></div>
+  <div class="cell" onclick="makeMove(2,2)"></div>
+</div>
+
+<p id="status">Player X's turn</p>
+
+<script>
+let currentPlayer = 'X';
+let board = ['', '', '', '', '', '', '', '', ''];
+
+function makeMove(row, col) {
+  const index = 3 * row + col;
+  if (board[index] === '' && !checkWinner()) {
+    board[index] = currentPlayer;
+    document.getElementById('board').children[index].textContent = currentPlayer;
+    currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+    document.getElementById('status').textContent = `Player ${currentPlayer}'s turn`;
+    checkWinner();
+  }
+}
+
+function checkWinner() {
+  const winPatterns = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+  ];
+
+  for (const pattern of winPatterns) {
+    const [a, b, c] = pattern;
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      document.getElementById('status').textContent = `Player ${board[a]} wins!`;
+      return true;
+    }
+  }
+
+  if (!board.includes('')) {
+    document.getElementById('status').textContent = "It's a draw!";
+    return true;
+  }
+
+  return false;
+}
+</script>
+</body>
+</html>

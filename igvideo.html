@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Data Fetch</title>
+</head>
+<body>
+    <button onclick="fetchInstagramData()">Fetch Instagram Data</button>
+    <p id="video-url"></p>
+
+    <script>
+        function fetchInstagramData() {
+            fetch('https://www.instagram.com/p/BWhyIhRDBCw/?__a=1')
+                .then(response => response.json())
+                .then(data => {
+                    const videoURL = data.graphql.shortcode_media.video_url;
+                    document.getElementById('video-url').textContent = 'Video URL: ' + videoURL;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>

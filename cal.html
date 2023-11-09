@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Calendar with Bootstrap</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f8f9fa;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            background-color: #ffffff;
+        }
+        th {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        h2 {
+            color: #007bff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2 id="month-year"></h2>
+                <table id="calendar"></table>
+            </div>
+            <div class="col-md-4">
+                <h2 id="next-month-year-1"></h2>
+                <table id="next-calendar-1"></table>
+            </div>
+            <div class="col-md-4">
+                <h2 id="next-month-year-2"></h2>
+                <table id="next-calendar-2"></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+        function generateCalendar(tableId, headerId, year, month) {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+
+            const calendarTable = document.getElementById(tableId);
+            const monthYearHeader = document.getElementById(headerId);
+            monthYearHeader.textContent = `${monthNames[firstDay.getMonth()]} ${firstDay.getFullYear()}`;
+
+            // Add day names row
+            if (calendarTable.rows.length === 0) {
+                const headerRow = calendarTable.insertRow();
+                dayNames.forEach(day => {
+                    const headerCell = headerRow.insertCell();
+                    headerCell.textContent = day;
+                    headerCell.style.fontWeight = "bold";
+                });
+            }
+
+            let dayCounter = 1;
+
+            for (let i = 0; i < 6; i++) {
+                const row = calendarTable.insertRow();
+
+                for (let j = 0; j < 7; j++) {
+                    const cell = row.insertCell();
+                    if ((i === 0 && j < firstDay.getDay()) || dayCounter > daysInMonth) {
+                        cell.textContent = "";
+                    } else {
+                        cell.textContent = dayCounter;
+                        dayCounter++;
+                    }
+                }
+            }
+        }
+
+        const currentDate = new Date();
+        generateCalendar("calendar", "month-year", currentDate.getFullYear(), currentDate.getMonth());
+        generateCalendar("next-calendar-1", "next-month-year-1", currentDate.getFullYear(), currentDate.getMonth() + 1);
+        generateCalendar("next-calendar-2", "next-month-year-2", currentDate.getFullYear(), currentDate.getMonth() + 2);
+    </script>
+
+</body>
+</html>

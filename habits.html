@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html
+ 
+lang="en">
+
+<head>
+
+    
+<meta
+ 
+charset="UTF-8">
+
+    
+<meta
+ 
+name="viewport"
+ 
+content="width=device-width, initial-scale=1.0">
+
+    
+<title>Dynamic Object Loading</title>
+
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+    <div id="app">
+        <ul>
+            <li v-for="item in items">
+              <span>{{ item.name }}</span>
+              <span>{{ item.number }}</span>
+              <span>{{ item.color }}</span>
+            </li>
+          </ul>
+    </div>
+
+    <script>
+        // Define JSON data array
+        const itemsData = [
+            {
+                "name": "Red",
+                "number": 1,
+                "color": "#FF0000"
+            },
+            {
+                "name": "Green",
+                "number": 2,
+                "color": "#00FF00"
+            },
+            {
+                "name": "Blue",
+                "number": 3,
+                "color": "#0000FF"
+            }
+        ];
+
+        // Create Vue instance and bind data
+        const app = Vue.createApp({
+            el: '#app',
+            data: {
+                items: itemsData
+            }
+        });
+    </script>
+</body>
+</html>

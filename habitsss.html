@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sortable List with Vue.js</title>
+  <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.css">
+  <link rel="stylesheet" href="https://bootswatch.com/_assets/css/custom.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  <!-- Vue.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <style>
+    body {
+        padding-top: 70px;
+        padding-bottom: 20px;
+    }  
+    .row{
+        justify-content: center;
+    }
+    .card{
+        margin-bottom: 5%;
+    }
+    .container-fluid{
+        width: 75%;
+    }
+    button{
+        border: none;
+    background: none;
+    color: white;
+    }
+    .orange{ color: orange}
+    .orangered{ color: orangered}
+    .green{ color: green}
+    .blue{ color: skyblue}
+    .purple{ color: mediumpurple}
+    .red{ color: red}
+    .lawngreen{ color: lawngreen}
+    .gray{ color: gray}
+    .yellow{ color: yellow}
+  </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="container-fluid">
+        <div class="row">
+            <div
+                v-for="(item, index) in sortedItems"
+                :key="index"
+                class="col-md-3"
+            >
+                <div class="card text-center">
+                    <h5 class="card-header">
+                        <i :class="item.class"></i> {{ item.title }}
+                        <button @click="increaseValue(item)">+</button>
+                    </h5>
+                    <div class="card-body">
+                        <p class="card-text">{{ item.value }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    items: [
+      { title: 'Здраве', value: '24', class: 'fas fa-heartbeat green' },
+      { title: 'Фитнес', value: '17', class: 'fas fa-dumbbell blue' },
+      { title: 'Дух', value: '11', class: 'fas fa-yin-yang orange' },
+      { title: 'Семейство', value: '4', class: 'fas fa-users orangered' },
+      { title: 'Ходене', value: '7', class: 'fas fa-walking orangered' },
+      { title: 'Хранене', value: '25', class: 'fas fa-utensils lawngreen' },
+      { title: 'Медитация', value: '28', class: 'fas fa-atom purple' },
+      { title: 'Връзки', value: '34', class: 'fas fa-heart red' },
+      { title: 'Приятели', value: '48', class: 'fas fa-beer orange' },
+      { title: 'Бизнес', value: '76', class: 'fas fa-briefcase blue' },
+      { title: 'Финанси', value: '11', class: 'fas fa-wallet green' },
+      { title: 'Дневник', value: '14', class: 'fas fa-book gray' },
+      { title: 'Кариера', value: '7', class: 'fas fa-user-tie blue' },
+      { title: 'Филантропия', value: '12', class: 'fas fa-gift red' },
+      { title: 'Креативност', value: '44', class: 'fas fa-cogs blue' },
+      { title: 'Умения', value: '18', class: 'fas fa-tools red' },
+      { title: 'Почивка', value: '28', class: 'fas fa-couch green' },
+      { title: 'Лукс', value: '28', class: 'far fa-gem blue' },
+      { title: 'Приключения', value: '22', class: 'fas fa-plane-departure purple' },
+      { title: 'Религия', value: '11', class: 'fas fa-peace purple' },
+      { title: 'Хоби', value: '24', class: 'fas fa-camera yellow' },
+      { title: 'Социални', value: '24', class: 'fas fa-people-arrows yellow' }
+    ],
+  },
+  computed: {
+    sortedItems() {
+      // Sort the items by the value property (as numbers)
+      return this.items.slice().sort((a, b) => parseInt(a.value.length) - parseInt(b.value));
+    },
+  },
+  methods: {
+    increaseValue(item) {
+      // Find the index of the clicked item
+      const index = this.items.findIndex(i => i === item);
+      if (index !== -1) {
+        // Increment the value of the selected item by one
+        this.$set(this.items, index, {
+          ...item,
+          value: (parseInt(item.value) + 1).toString(),
+        });
+      }
+    },
+  },
+});
+
+</script>
+
+
+
+</body>
+</html>

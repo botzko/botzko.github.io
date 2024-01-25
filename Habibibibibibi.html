@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draggable Sortable List with Vue.js</title>
+  <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.css">
+  <link rel="stylesheet" href="https://bootswatch.com/_assets/css/custom.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  <!-- Vue.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <!-- vuedraggable CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vuedraggable@2"></script>
+  <style>
+    body {
+        padding-top: 70px;
+        padding-bottom: 20px;
+    }  
+    input {
+        border: none;
+    }
+    .row {
+        justify-content: center;
+    }
+    .card {
+        margin-bottom: 5%;
+    }
+    .container-fluid {
+        width: 75%;
+    }
+    button {
+        border: none;
+        background: none;
+        color: white;
+    }
+    .orange { color: orange}
+    .orangered { color: orangered}
+    .green { color: green}
+    .blue { color: skyblue}
+    .purple { color: mediumpurple}
+    .red { color: red}
+    .lawngreen { color: lawngreen}
+    .gray { color: gray}
+    .yellow { color: yellow}
+  </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="container-fluid">
+        <!-- Wrap the v-for loop with the draggable component -->
+        <draggable v-model="items" class="row">
+            <template v-for="(item, index) in items">
+                <div :key="index" class="col-md-3">
+                    <div class="card text-center">
+                        <h5 class="card-header">
+                            <i :class="item.class"></i> {{ item.title }}
+                            <button @click="toggleSection(index)">+</button>
+                        </h5>
+                        <div class="card-body">
+                            <p class="card-text">{{ item.entries.length }}</p>
+                            <table class="table table-dark table-hover table-sm table-bordered"  v-if="isActive[index]">
+                                <tr><td><input v-model="entry" class="bg-dark text-white" placeholder="new" /><button @click="increaseValue(item)">add</button></td></tr>
+                                <tr v-for="(entry, entryIndex) in item.entries" :key="entryIndex"><td>{{ entry }}</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </draggable>
+    </div>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  components: {
+    draggable: window.vuedraggable,
+  },
+  data: {
+    entry: "",
+    isActive: new Array(20).fill(false),
+    items: [
+        { title: 'Здраве', class: 'fas fa-heartbeat green', entries: ['Some text 1', 'Some text 2'] },
+        { title: 'Фитнес', class: 'fas fa-dumbbell blue', entries: ['Some text 3', 'Some text 4'] },
+        { title: 'Дух', class: 'fas fa-yin-yang orange', entries: ['Some text 5', 'Some text 6'] },
+        { title: 'Семейство', class: 'fas fa-users orangered', entries: ['Some text 7', 'Some text 8'] },
+        { title: 'Ходене', class: 'fas fa-walking orangered', entries: ['Some text 9', 'Some text 10'] },
+        { title: 'Хранене', class: 'fas fa-utensils lawngreen', entries: ['Some text 11', 'Some text 12'] },
+        { title: 'Медитация', class: 'fas fa-atom purple', entries: ['Some text 13', 'Some text 14'] },
+        { title: 'Връзки', class: 'fas fa-heart red', entries: ['Some text 15', 'Some text 16'] },
+        { title: 'Приятели', class: 'fas fa-beer orange', entries: ['Some text 17', 'Some text 18'] },
+        { title: 'Бизнес', class: 'fas fa-briefcase blue', entries: ['Some text 19', 'Some text 20'] },
+        { title: 'Финанси', class: 'fas fa-wallet green', entries: ['Some text 21', 'Some text 22'] },
+        { title: 'Дневник', class: 'fas fa-book gray', entries: ['Some text 23', 'Some text 24'] },
+        { title: 'Кариера', class: 'fas fa-user-tie blue', entries: ['Some text 25', 'Some text 26'] },
+        { title: 'Филантропия', class: 'fas fa-gift red', entries: ['Some text 27', 'Some text 28'] },
+        { title: 'Креативност', class: 'fas fa-cogs blue', entries: ['Some text 29', 'Some text 30'] },
+        { title: 'Умения', class: 'fas fa-tools red', entries: ['Some text 31', 'Some text 32'] },
+        { title: 'Почивка', class: 'fas fa-couch green', entries: ['Some text 33', 'Some text 34'] },
+        { title: 'Лукс', class: 'far fa-gem blue', entries: ['Some text 35', 'Some text 36'] },
+        { title: 'Приключения', class: 'fas fa-plane-departure purple', entries: ['Some text 37', 'Some text 38'] },
+        { title: 'Религия', class: 'fas fa-peace purple', entries: ['Some text 39', 'Some text 40'] },
+        { title: 'Хоби', class: 'fas fa-camera yellow', entries: ['Some text 41', 'Some text 42'] },
+        { title: 'Социални', class: 'fas fa-people-arrows yellow', entries: ['Some text 43', 'Some text 44'] }
+    ],
+  },
+  computed: {
+    sortedItems() {
+      return this.items.slice().sort((a, b) => a.entries.length - b.entries.length);
+    },
+  },
+  methods: {
+    increaseValue(item) {
+      this.$set(item, 'entries', [...item.entries, this.entry]);
+      this.entry = '';
+    },
+    toggleSection(index) {
+      this.$set(this.isActive, index, !this.isActive[index]);
+    },
+  },
+});
+</script>
+
+</body>
+</html>

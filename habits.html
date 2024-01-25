@@ -1,55 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="en-US">
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-  <link rel="stylesheet" href="https://bootswatch.com/5/slate/bootstrap.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="300" />
-  <title>First Page</title>
+    <meta charset="UTF-8">
+    <title>Навици</title>
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4/slate/bootstrap.min.css">
+    <link rel="stylesheet" href="https://bootswatch.com/_assets/css/custom.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4/js/bootstrap.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.2.3/firebase.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<style>
+body {
+    padding-top: 70px;
+    padding-bottom: 20px;
+}  
+hidden{
+    display: none;
+}
+.card{
+    margin-bottom: 5%;
+}
+.container-fluid{
+	width: 75%;
+}
+
+.orange{ color: orange}
+.orangered{ color: orangered}
+.green{ color: green}
+.blue{ color: skyblue}
+.purple{ color: mediumpurple}
+.red{ color: red}
+.lawngreen{ color: lawngreen}
+.gray{ color: gray}
+.yellow{ color: yellow}
+</style>
 
 </head>
+
+
 <body>
-    <div id="app">
-        <ul>
-            <li v-for="item in items">
-              <span>{{ item.name }}</span>
-              <span>{{ item.number }}</span>
-              <span>{{ item.color }}</span>
-            </li>
-          </ul>
+<div class="container-fluid">
+    <div class="row" id="sortable">
+        <div id="app"></div>
     </div>
+</div>
+  <script>
+    // JSON data
+    const jsonData = [
+      {
+        "name": "Здраве",
+        "number": 42,
+        "color": "fa-heartbeat"
+      },
+      {
+        "name": "Финанси",
+        "number": 18,
+        "color": "fa-heartbeat"
+      },
+      {
+        "name": "Знания",
+        "number": 7,
+        "color": "fa-heartbeat"
+      }
+    ];
 
-    <script>
-        // Define JSON data array
-        const itemsData = [
-            {
-                "name": "Red",
-                "number": 1,
-                "color": "#FF0000"
-            },
-            {
-                "name": "Green",
-                "number": 2,
-                "color": "#00FF00"
-            },
-            {
-                "name": "Blue",
-                "number": 3,
-                "color": "#0000FF"
-            }
-        ];
+    // Vue app
+    new Vue({
+      el: '#app',
+      mounted: function () {
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+    },
+      data: {
+        items: jsonData
+      },
+      template: `
+        <div>
+          <div v-for="(item, index) in items" :key="index" class="col-md-3">
+            <div class="card text-center">
+				<h5 class="card-header ">
+					<i class="fas {{ item.color }} green"></i> {{ item.name }}
+				</h5>
+				<div class="card-body">
+					<p class="card-text">{{ item.number }}</p>
+				</div>
+			</div>
+            <hr>
+          </div>
+        </div>
+      `
+    });
+  </script>
 
-        // Create Vue instance and bind data
-        const app = Vue.createApp({
-            el: '#app',
-            data: {
-                items: itemsData
-            }
-        });
-        app.mount('#app');
-    </script>
 </body>
 </html>

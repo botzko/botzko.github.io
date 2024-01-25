@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sortable List with Vue.js</title>
+  <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.css">
+  <link rel="stylesheet" href="https://bootswatch.com/_assets/css/custom.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  <!-- Vue.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <style>
+    body {
+        padding-top: 70px;
+        padding-bottom: 20px;
+    }  
+    input{
+        border: none;
+    }
+    .row{
+        justify-content: center;
+    }
+    .card{
+        margin-bottom: 5%;
+    }
+    .container-fluid{
+        width: 75%;
+    }
+    .card-body{
+        padding: 0px;
+    }
+    .card-text{
+        padding: 0px;
+    }
+    button{
+        border: none;
+        background: none;
+        color: white;
+    }
+    .orange{ color: orange}
+    .orangered{ color: orangered}
+    .green{ color: green}
+    .blue{ color: skyblue}
+    .purple{ color: mediumpurple}
+    .red{ color: red}
+    .lawngreen{ color: lawngreen}
+    .gray{ color: gray}
+    .yellow{ color: yellow}
+  </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="container-fluid">
+        
+        <div class="row">
+            <div
+                v-for="(item, index) in sortedItems"
+                :key="index"
+                class="col-md-3"
+            >
+                <div class="card text-center">
+                    <h5 class="card-header">
+                        <i :class="item.class"></i> {{ item.title }} {{ item.entries.length }}
+                        <button @click="toggleSection(index)" class="btn-sm float-right">☰</button>
+                    </h5>
+                    <div class="card-body">
+                        <table class="table table-striped table-sm"  v-if="isActive[index]">
+                            <tbody>
+                                <tr><td><input v-model="entry" class="bg-dark text-white" placeholder="" /><button @click="increaseValue(item)" class="btn-danger">❱❱❱</button></td></tr>
+                                <tr v-for="(entry, entryIndex) in item.entries" :key="entryIndex"><td>{{ entry }}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    entry: "",
+    isActive: new Array(20).fill(false), // Assuming the number of items is constant
+    items: [
+        { title: 'Здраве', class: 'fas fa-heartbeat green', entries: [] },
+        { title: 'Фитнес', class: 'fas fa-dumbbell blue', entries: [] },
+        { title: 'Дух', class: 'fas fa-yin-yang orange', entries: [] },
+        { title: 'Семейство', class: 'fas fa-users orangered', entries: [] },
+        { title: 'Ходене', class: 'fas fa-walking orangered', entries: [] },
+        { title: 'Хранене', class: 'fas fa-utensils lawngreen', entries: [] },
+        { title: 'Медитация', class: 'fas fa-atom purple', entries: [] },
+        { title: 'Връзки', class: 'fas fa-heart red', entries: [] },
+        { title: 'Приятели', class: 'fas fa-beer orange', entries: [] },
+        { title: 'Бизнес', class: 'fas fa-briefcase blue', entries: [] },
+        { title: 'Финанси', class: 'fas fa-wallet green', entries: [] },
+        { title: 'Дневник', class: 'fas fa-book gray', entries: [] },
+        { title: 'Кариера', class: 'fas fa-user-tie blue', entries: [] },
+        { title: 'Филантропия', class: 'fas fa-gift red', entries: [] },
+        { title: 'Креативност', class: 'fas fa-cogs blue', entries: [] },
+        { title: 'Умения', class: 'fas fa-tools red', entries: [] },
+        { title: 'Почивка', class: 'fas fa-couch green', entries: [] },
+        { title: 'Лукс', class: 'far fa-gem blue', entries: [] },
+        { title: 'Приключения', class: 'fas fa-plane-departure purple', entries: [] },
+        { title: 'Религия', class: 'fas fa-peace purple', entries: [] },
+        { title: 'Хоби', class: 'fas fa-camera yellow', entries: [] },
+        { title: 'Социални', class: 'fas fa-people-arrows yellow', entries: [] }
+    ],
+  },
+  computed: {
+    sortedItems() {
+      // Sort the items by the count of entries in descending order
+      //return this.items.slice().sort((a, b) => a.entries.length - b.entries.length);
+      return this.items
+    },
+  },
+  methods: {
+    increaseValue(item) {
+      // Increment the count of entries for the selected item by one
+      if(this.entry != ''){
+      this.$set(item, 'entries', [...item.entries, this.entry]);
+      this.entry = '';
+      console.log(this.items);
+    }
+    },
+    toggleSection(index) {
+      // Toggle the visibility of the section corresponding to the clicked button
+      this.$set(this.isActive, index, !this.isActive[index]);
+    },
+  },
+});
+</script>
+
+<style>
+  .card {
+    margin-bottom: 5%;
+  }
+</style>
+
+</body>
+</html>

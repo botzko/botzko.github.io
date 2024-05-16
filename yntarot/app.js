@@ -37,10 +37,7 @@ const tarotCards = [
     const randomCard = tarotCards[randomIndex];
   
     // Display the card image
-    const cardImage = document.createElement('img');
-    cardImage.src = randomCard.image;
-    cardImageContainer.innerHTML = '';
-    cardImageContainer.appendChild(cardImage);
+    cardImageElement.src = randomCard.image;
   
     // Display the result
     resultContainer.innerHTML = `

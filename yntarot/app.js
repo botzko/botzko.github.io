@@ -27,7 +27,6 @@ const tarotCards = [
   ];
   
   // Get DOM elements
-  const pickCardButton = document.getElementById('pickCard');
   const cardImageContainer = document.getElementById('cardImage');
   const resultContainer = document.getElementById('result');
   
@@ -51,4 +50,4 @@ const tarotCards = [
   }
   
   // Add click event listener to the button
-  pickCardButton.addEventListener('click', pickRandomCard);
+  cardImageContainer.addEventListener('click', pickRandomCard);

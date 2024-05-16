@@ -1,0 +1,12 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  #cardImage {
+    margin: 20px 0;
+  }
+  
+  #cardImage img {
+    max-width: 200px;
+  }

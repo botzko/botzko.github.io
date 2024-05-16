@@ -44,8 +44,8 @@ const tarotCards = [
   
     // Display the result
     resultContainer.innerHTML = `
-      <h2>The card you picked is "${randomCard.name}"</h2>
-      <p><strong>Meaning:</strong> ${randomCard.meaning}</p>
+      <h2>"${randomCard.name}"</h2>
+      <p><strong> ${randomCard.meaning}</strong></p>
       <p>${randomCard.explanation}</p>
     `;
   }

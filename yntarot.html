@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Tarot Card Reader</title>
+  <title>ADHD Yes / No Tarot</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,15 +12,27 @@
       margin: 20px 0;
       font-size: 150px;
       color: #ccc;
+      cursor: pointer;
+    }
+    #card {
+        display: inline-block;
+        width: 350px;
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        cursor: pointer;
+        user-select: none;
     }
   </style>
 </head>
 <body>
-  <h1>Tarot Card Reader</h1>
-  <button id="pickCard">Pick a Card</button>
-  <div id="cardImage">&#9824;</div>
-  <div id="result"></div>
-
+  <h1>ADHD Yes / No Tarot</h1>
+  <div id="card">
+    <div id="cardImage">&#9824;</div>
+    <div id="result"></div>
+  </div>
   <script type="module">
     // Array of tarot card objects
     const tarotCards = [
@@ -50,7 +62,7 @@
     ];
 
     // Get DOM elements
-    const pickCardButton = document.getElementById('pickCard');
+    const card = document.getElementById('card');
     const cardImageContainer = document.getElementById('cardImage');
     const resultContainer = document.getElementById('result');
 
@@ -64,14 +76,14 @@
 
       // Display the result
       resultContainer.innerHTML = `
-        <h2>The card you picked is "${randomCard.name}"</h2>
-        <p><strong>Meaning:</strong> ${randomCard.meaning}</p>
+        <h2>"${randomCard.name}"</h2>
+        <p>${randomCard.meaning}</p>
         <p>${randomCard.explanation}</p>
       `;
     }
 
     // Add click event listener to the button
-    pickCardButton.addEventListener('click', pickRandomCard);
+    card.addEventListener('click', pickRandomCard);
   </script>
 </body>
 </html>

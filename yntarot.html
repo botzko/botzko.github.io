@@ -2,11 +2,23 @@
 <html>
 <head>
   <title>ADHD Yes / No Tarot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    html {
+    --s: 200px; /* control the size*/
+    --c1: #1d1d1d;
+    --c2: #4e4f51;
+    --c3: #3c3c3c;
+    
+    background:
+        repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 180deg) 
+        calc(.5*var(--s)) calc(.5*var(--s)*0.577),
+        repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 180deg);
+    background-size: var(--s) calc(var(--s)*0.577);
+    }
     body {
       font-family: Arial, sans-serif;
       text-align: center;
+      color: white;
     }
 
     #cardImage {
@@ -16,6 +28,12 @@
       cursor: pointer;
     }
     #card {
+        background: rgba(255, 255, 255, 0.19);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.37);
         display: inline-block;
         width: 90%;
         max-width: 400px;

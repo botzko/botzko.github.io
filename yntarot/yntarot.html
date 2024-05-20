@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tarot Card Reader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    #cardImage {
+      margin: 20px 0;
+      font-size: 150px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tarot Card Reader</h1>
+  <button id="pickCard">Pick a Card</button>
+  <div id="cardImage">&#9824;</div>
+  <div id="result"></div>
+
+  <script type="module">
+    // Array of tarot card objects
+    const tarotCards = [
+      // Major Arcana
+      { name: 'The Fool', meaning: 'Yes', symbol: '&#127774;', explanation: 'The Fool represents new beginnings, spontaneity, and a free spirit. This card suggests taking a leap of faith and embracing opportunities.' },
+      { name: 'The Magician', meaning: 'Yes', symbol: '&#9994;', explanation: 'The Magician symbolizes the power of manifestation, creativity, and resourcefulness. This card indicates that you have the skills and ability to achieve your goals.' },
+      { name: 'The High Priestess', meaning: 'Yes', symbol: '&#9792;', explanation: 'The High Priestess represents intuition, wisdom, and spiritual enlightenment. This card suggests trusting your inner voice and seeking knowledge.' },
+      { name: 'The Empress', meaning: 'Yes', symbol: '&#9819;', explanation: 'The Empress signifies fertility, nurturing, and abundance. This card indicates a time of growth, sensuality, and enjoying life\'s pleasures.' },
+      { name: 'The Emperor', meaning: 'No', symbol: '&#9818;', explanation: 'The Emperor represents authority, structure, and discipline. This card suggests that you may be facing obstacles or a need for more control.' },
+      { name: 'The Hierophant', meaning: 'No', symbol: '&#9825;', explanation: 'The Hierophant symbolizes tradition, conformity, and established systems. This card indicates a need to question beliefs or break from conventions.' },
+      // ... (add the remaining tarot card objects)
+    ];
+
+    // Get DOM elements
+    const pickCardButton = document.getElementById('pickCard');
+    const cardImageContainer = document.getElementById('cardImage');
+    const resultContainer = document.getElementById('result');
+
+    // Function to pick a random card
+    function pickRandomCard() {
+      const randomIndex = Math.floor(Math.random() * tarotCards.length);
+      const randomCard = tarotCards[randomIndex];
+
+      // Update the card symbol
+      cardImageContainer.innerHTML = randomCard.symbol;
+
+      // Display the result
+      resultContainer.innerHTML = `
+        <h2>The card you picked is "${randomCard.name}"</h2>
+        <p><strong>Meaning:</strong> ${randomCard.meaning}</p>
+        <p>${randomCard.explanation}</p>
+      `;
+    }
+
+    // Add click event listener to the button
+    pickCardButton.addEventListener('click', pickRandomCard);
+  </script>
+</body>
+</html>

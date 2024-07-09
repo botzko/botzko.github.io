@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADHD Yes No Tarot</title>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');</style>
+    <style>
+        
+        body {
+            font-family: "Rye", serif;
+            font-weight: 400;
+            font-style: normal;
+            background-color: #2c2c2c;
+            color: #f3ce99;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 300px;
+        }
+        h1 {
+            color: #c9a95c;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .card-container {
+            width: 100%;
+            height: 600px;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.8s;
+        }
+        .card-front{
+            background-image: linear-gradient(45deg, #241d36 25%, #2F293F 25%, #2F293F 50%, #241d36 50%, #241d36 75%, #2F293F 75%, #2F293F 100%);
+            background-size: 40px 40px;
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1a1a;
+            border: 2px inset #f3ce99;
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .card-back {
+            background-color: #2F293F;
+            transform: rotateY(180deg);
+        }
+        .card.revealed {
+            transform: rotateY(180deg);
+        }
+        .card-symbol {
+            width: 250px;
+            margin-top: -25px;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 22px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .card-answer {
+            font-size: 32px;
+            color: #f3ce99;
+        }
+        .card-description {
+            font-size: 14px;
+            line-height: 1.4;
+            text-align: center;
+            background-color: #241d36;
+            color: #f3ce99;
+            padding: 10px;
+            border-radius: 5px;
+            flex-grow: 0.1;
+            display: flex;
+            align-items: center;
+        }
+        button {
+            background-color: #c9a95c;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #d6b978;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="card-container">
+            <div class="card" id="card" onclick="drawCard()">
+                <div class="card-face card-front">
+                    <img src="svg/sphere.png" alt="Crystal Ball" class="card-symbol">
+                    <div class="card-title">Ask a question and draw a card</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-answer" id="cardAnswer"></div>
+                    <img id="cardSymbol" src="" alt="Tarot Card Symbol" class="card-symbol">
+                    <div class="card-description" id="cardDescription"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const tarotCards = [
+      // Major Arcana
+      { name: 'The Fool', meaning: 'Yes', symbol: 'svg/fool.png', explanation: 'The Fool represents new beginnings, spontaneity, and a free spirit. This card suggests taking a leap of faith and embracing opportunities.' },
+      { name: 'The Magician', meaning: 'Yes', symbol: 'svg/magician.png', explanation: 'The Magician symbolizes the power of manifestation, creativity, and resourcefulness. This card indicates that you have the skills and ability to achieve your goals.' },
+      { name: 'The High Priestess', meaning: 'Yes', symbol: 'svg/high-priestess.png', explanation: 'The High Priestess represents intuition, wisdom, and spiritual enlightenment. This card suggests trusting your inner voice and seeking knowledge.' },
+      { name: 'The Empress', meaning: 'Yes', symbol: 'svg/empress.png', explanation: 'The Empress signifies fertility, nurturing, and abundance. This card indicates a time of growth, sensuality, and enjoying life\'s pleasures.' },
+      { name: 'The Emperor', meaning: 'No', symbol: 'svg/emperor.png', explanation: 'The Emperor represents authority, structure, and discipline. This card suggests that you may be facing obstacles or a need for more control.' },
+      { name: 'The Hierophant', meaning: 'No', symbol: 'svg/hierophant.png', explanation: 'The Hierophant symbolizes tradition, conformity, and established systems. This card indicates a need to question beliefs or break from conventions.' },
+      { name: 'The Lovers', meaning: 'Yes', symbol: 'svg/lovers.png', explanation: 'The Lovers represent love, harmony, and meaningful connections. This card suggests a time of important choices and following your heart.' },
+      { name: 'The Chariot', meaning: 'Yes', symbol: 'svg/chariot.png', explanation: 'The Chariot signifies willpower, determination, and overcoming obstacles. This card indicates that you have the drive and focus to achieve your goals.' },
+      { name: 'Strength', meaning: 'Yes', symbol: 'svg/strength.png', explanation: 'Strength represents inner courage, compassion, and the ability to tame the wild aspects of life. This card suggests that you have the fortitude to overcome challenges.' },
+      { name: 'The Hermit', meaning: 'No', symbol: 'svg/hermit.png', explanation: 'The Hermit symbolizes introspection, solitude, and seeking inner guidance. This card indicates a need for contemplation and soul-searching.' },
+      { name: 'Wheel of Fortune', meaning: 'Yes', symbol: 'svg/wheel-of-fortune.png', explanation: 'The Wheel of Fortune represents cycles, destiny, and the ever-changing nature of life. This card suggests that you should embrace the changes coming your way.' },
+      { name: 'Justice', meaning: 'No', symbol: 'svg/justice.png', explanation: 'Justice symbolizes fairness, truth, and cause and effect. This card indicates a need to seek balance and make impartial decisions.' },
+      { name: 'The Hanged Man', meaning: 'No', symbol: 'svg/hanged-man.png', explanation: 'The Hanged Man represents sacrifice, letting go, and a new perspective. This card suggests that you may need to suspend your beliefs or surrender to a situation.' },
+      { name: 'Death', meaning: 'No', symbol: 'svg/death.png', explanation: 'Death symbolizes endings, transitions, and transformations. This card indicates that you may be facing a significant change or the need to let go of something.' },
+      { name: 'Temperance', meaning: 'Yes', symbol: 'svg/temperance.png', explanation: 'Temperance represents balance, moderation, and patience. This card suggests that you should strive for harmony and find the middle ground.' },
+      { name: 'The Devil', meaning: 'No', symbol: 'svg/devil.png', explanation: 'The Devil symbolizes temptation, addiction, and the darker aspects of life. This card indicates a need to break free from unhealthy attachments or behaviors.' },
+      { name: 'The Tower', meaning: 'No', symbol: 'svg/tower.png', explanation: 'The Tower represents upheaval, sudden change, and the breaking down of old structures. This card suggests that you may be facing a crisis or a major life event.' },
+      { name: 'The Star', meaning: 'Yes', symbol: 'svg/star.png', explanation: 'The Star signifies hope, inspiration, and renewal. This card indicates that you should have faith and pursue your dreams and aspirations.' },
+      { name: 'The Moon', meaning: 'No', symbol: 'svg/moon.png', explanation: 'The Moon represents illusion, fear, and the unconscious mind. This card suggests that you may be facing confusion or deception, and should trust your intuition.' },
+      { name: 'The Sun', meaning: 'Yes', symbol: 'svg/sun.png', explanation: 'The Sun symbolizes joy, success, and positivity. This card indicates that you are on the right path and can expect good fortune and happiness.' },
+      { name: 'Judgement', meaning: 'Yes', symbol: 'svg/judgement.png', explanation: 'Judgement represents resurrection, awakening, and a call to action. This card suggests that you should follow your true calling and embrace a fresh start.' },
+      { name: 'The World', meaning: 'Yes', symbol: 'svg/world.png', explanation: 'The World signifies completion, integration, and accomplishment. This card indicates that you have achieved a major goal or are ready to move on to the next stage of your journey.' },
+    ];
+
+    function drawCard() {
+        const card = document.getElementById('card');
+        card.classList.remove('revealed');
+        
+        setTimeout(() => {
+            const randomCard = tarotCards[Math.floor(Math.random() * tarotCards.length)];
+            document.getElementById('cardSymbol').src = randomCard.symbol;
+            document.getElementById('cardSymbol').alt = randomCard.name;
+            document.getElementById('cardAnswer').textContent = randomCard.meaning;
+            document.getElementById('cardDescription').textContent = randomCard.explanation;
+            
+            card.classList.add('revealed');
+        }, 1300);
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Kids Page Template Generator</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <style>
+                .page-template {
+                      border: 1px solid #000;
+                            padding: 20px;
+                                  margin: 20px;
+                                      }
+                                          img {
+                                                max-width: 100%;
+                                                      height: auto;
+                                                          }
+                                                            </style>
+                                                            </head>
+                                                            <body>
+                                                              <div id="app">
+                                                                  <input v-model="userPrompt" placeholder="Enter your prompt" />
+                                                                      <button @click="generateImage">Generate Image</button>
+                                                                          <div v-if="imageUrl">
+                                                                                <img :src="imageUrl" alt="Generated Image" />
+                                                                                    </div>
+                                                                                      </div>
+
+                                                                                        <script>
+                                                                                            const { createApp } = Vue;
+
+                                                                                                createApp({
+                                                                                                      data() {
+                                                                                                              return {
+                                                                                                                        userPrompt: '',
+                                                                                                                                  imageUrl: ''
+                                                                                                                                          };
+                                                                                                                                                },
+                                                                                                                                                      methods: {
+                                                                                                                                                              async generateImage() {
+                                                                                                                                                                        try {
+                                                                                                                                                                                    const response = await axios.post('https://api.openai.com/v1/images/generations', {
+                                                                                                                                                                                                  prompt: this.userPrompt,
+                                                                                                                                                                                                                n: 1,
+                                                                                                                                                                                                                              size: '512x512'
+                                                                                                                                                                                                                                          }, {
+                                                                                                                                                                                                                                                        headers: {
+                                                                                                                                                                                                                                                                        'Authorization': `Bearer YOUR_API_KEY`,
+                                                                                                                                                                                                                                                                                        'Content-Type': 'application/json'
+                                                                                                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                                                                                                                  });
+                                                                                                                                                                                                                                                                                                                              this.imageUrl = response.data.data[0].url;
+                                                                                                                                                                                                                                                                                                                                        } catch (error) {
+                                                                                                                                                                                                                                                                                                                                                    console.error('Error generating image:', error);
+                                                                                                                                                                                                                                                                                                                                                              }
+                                                                                                                                                                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                }).mount('#app');
+                                                                                                                                                                                                                                                                                                                                                                                  </script>
+                                                                                                                                                                                                                                                                                                                                                                                  </body>
+                                                                                                                                                                                                                                                                                                                                                                                  </html>
+                                                                                                                                                                                                                                                                                                                                                                                  .

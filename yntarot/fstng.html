@@ -1,0 +1,343 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fasting Tracker</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --edit: #8b5cf6;
+            --edit-dark: #7c3aed;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --gauge-bg: #e2e8f0;
+            --gauge-progress: #818cf8;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--background);
+            padding: 1rem;
+            color: var(--text);
+        }
+
+        .container {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            margin: 6px;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.2s ease;
+            width: 200px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        button#resetBtn {
+            background-color: var(--danger);
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+        }
+
+        button#resetBtn:hover {
+            background-color: var(--danger-dark);
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+        }
+
+        button#editBtn {
+            background-color: var(--edit);
+            box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+        }
+
+        button#editBtn:hover {
+            background-color: var(--edit-dark);
+            box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3);
+        }
+
+        .time-display {
+            font-size: 3em;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            font-family: 'SF Mono', 'Roboto Mono', monospace;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -1px;
+        }
+
+        .gauge-container {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            position: relative;
+            padding: 1rem;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin: 0 0 1.5rem 0;
+            width: 100%;
+            text-align: center;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .controls {
+            margin-top: 1.5rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-edit {
+            display: none;
+            margin: 1rem 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .time-edit.visible {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .time-edit input {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1em;
+            width: 200px;
+            text-align: center;
+            transition: border-color 0.2s ease;
+            outline: none;
+        }
+
+        .time-edit input:focus {
+            border-color: var(--primary);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 0.95em;
+                width: 180px;
+            }
+
+            .time-display {
+                font-size: 2.5em;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .time-edit input {
+                width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fasting Tracker</h1>
+        <div class="gauge-container">
+            <div class="time-display">
+                <span id="timeElapsed">00:00:00</span>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="startBtn">Start Fast</button>
+            <button id="editBtn">Edit Start Time</button>
+            <button id="resetBtn">Reset</button>
+            <div class="time-edit" id="timeEdit">
+                <input type="datetime-local" id="startTimeInput" step="1">
+                <button id="saveTimeBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const config = {
+            width: 300,
+            height: 300,
+            margin: 40,
+            minValue: 0,
+            maxValue: 24,
+            circleThickness: 0.12
+        };
+
+        const gauge = d3.select('.gauge-container')
+            .append('svg')
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('viewBox', `0 0 ${config.width} ${config.height}`)
+            .attr('preserveAspectRatio', 'xMidYMid meet');
+
+        const radius = Math.min(config.width, config.height) / 2 - config.margin;
+        const centerX = config.width / 2;
+        const centerY = config.height / 2;
+
+        const backgroundArc = d3.arc()
+            .innerRadius(radius * (1 - config.circleThickness))
+            .outerRadius(radius)
+            .startAngle(0)
+            .endAngle(2 * Math.PI);
+
+        gauge.append('path')
+            .attr('transform', `translate(${centerX},${centerY})`)
+            .attr('d', backgroundArc)
+            .style('fill', 'var(--gauge-bg)');
+
+        const progressArc = d3.arc()
+            .innerRadius(radius * (1 - config.circleThickness))
+            .outerRadius(radius)
+            .startAngle(0);
+
+        const progressPath = gauge.append('path')
+            .attr('transform', `translate(${centerX},${centerY})`)
+            .style('fill', 'var(--gauge-progress)')
+            .style('transition', 'fill 0.3s ease');
+
+        let startTime = localStorage.getItem('fastingStartTime');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const editBtn = document.getElementById('editBtn');
+        const timeEdit = document.getElementById('timeEdit');
+        const startTimeInput = document.getElementById('startTimeInput');
+        const saveTimeBtn = document.getElementById('saveTimeBtn');
+        const timeElapsedSpan = document.getElementById('timeElapsed');
+        let animationFrameId;
+
+        function formatDateTime(timestamp) {
+            const date = new Date(parseInt(timestamp));
+            return date.toISOString().slice(0, 19);
+        }
+
+        function updateDisplay() {
+            if (!startTime) {
+                timeElapsedSpan.textContent = '00:00:00';
+                progressPath.attr('d', progressArc.endAngle(0));
+                return;
+            }
+
+            const elapsed = Date.now() - parseInt(startTime);
+            const hours = Math.floor(elapsed / 3600000);
+            const minutes = Math.floor((elapsed % 3600000) / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            const progress = Math.min(hours + minutes/60 + seconds/3600, 24);
+
+            timeElapsedSpan.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            const endAngle = (progress / 24) * 2 * Math.PI;
+            progressPath.attr('d', progressArc.endAngle(endAngle));
+
+            animationFrameId = requestAnimationFrame(updateDisplay);
+        }
+
+        function startFasting() {
+            if (!startTime) {
+                startTime = Date.now().toString();
+                localStorage.setItem('fastingStartTime', startTime);
+                updateButtonStates(true);
+                updateDisplay();
+            }
+        }
+
+        function resetFasting() {
+            startTime = null;
+            localStorage.removeItem('fastingStartTime');
+            updateButtonStates(false);
+            cancelAnimationFrame(animationFrameId);
+            updateDisplay();
+        }
+
+        function updateButtonStates(fasting) {
+            startBtn.textContent = fasting ? 'Fasting in Progress' : 'Start Fast';
+            startBtn.disabled = fasting;
+            editBtn.disabled = !fasting;
+        }
+
+        function toggleTimeEdit() {
+            timeEdit.classList.toggle('visible');
+            if (timeEdit.classList.contains('visible') && startTime) {
+                startTimeInput.value = formatDateTime(startTime);
+            }
+        }
+
+        function saveStartTime() {
+            const newStartTime = new Date(startTimeInput.value).getTime();
+            if (!isNaN(newStartTime)) {
+                startTime = newStartTime.toString();
+                localStorage.setItem('fastingStartTime', startTime);
+                timeEdit.classList.remove('visible');
+                updateDisplay();
+            }
+        }
+
+        startBtn.addEventListener('click', startFasting);
+        resetBtn.addEventListener('click', resetFasting);
+        editBtn.addEventListener('click', toggleTimeEdit);
+        saveTimeBtn.addEventListener('click', saveStartTime);
+
+        if (startTime) {
+            updateButtonStates(true);
+            updateDisplay();
+        } else {
+            updateButtonStates(false);
+            editBtn.disabled = true;
+        }
+    </script>
+</body>
+</html>

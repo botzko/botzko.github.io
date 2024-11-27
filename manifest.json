@@ -2,7 +2,7 @@
     "name": "Fastinger",
     "short_name": "Fastinger",
     "description": "Track your fasting time with style",
-    "start_url": "/fastr.html",
+    "start_url": "https://botzko.github.io/fastr.html",
     "display": "fullscreen",
     "background_color": "#1B736F",
     "theme_color": "#10504D",

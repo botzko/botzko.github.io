@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body{
+            background: rgb(27,115,111);
+            background: radial-gradient(circle, rgba(27,115,111,1) 0%, rgba(16,80,77,1) 100%);
+            margin-top: 70px;
+        }
+        .circle {
+            margin: 0px auto;
+            background: gold;
+            width: 333px; 
+            height: 333px;
+            border-radius: 50%;
+            display: flex; /* or inline-flex */
+            align-items: center; 
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.09);
+            color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            font-size: 65px;
+                /* Keep your existing styles and add: */
+            letter-spacing: 0px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        #timeElapsed {
+            width: 300px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
+        }
+        .controls {
+            margin: 30px auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .controls button {
+            font-family: "monospace", sans-serif;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.09);
+            color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .controls button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .controls button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .time-edit-container {
+            display: none;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .time-edit-container.visible {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .time-edit-container input {
+            font-family: monospace;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.09);
+            color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .time-edit-container input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .time-edit-container button {
+            font-family: "Brush Script MT", sans-serif;
+            padding: 12px 25px;
+            font-size: 20px;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.09);
+            color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-edit-container button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="circle"><span id="timeElapsed">00:00:00</span></div>
+    <div class="controls">
+        <button id="startBtn">Start Fast</button>
+        <button id="editBtn">Edit Start Time</button>
+        <button id="resetBtn">Reset</button><br/>
+
+    </div>
+    <div id="timeEdit" class="time-edit-container">
+        <input type="datetime-local" id="startTimeInput">
+        <button id="saveTimeBtn">Save Time</button>
+    </div>
+
+
+    <script>
+        const config = {
+            width: 300,
+            height: 300,
+            margin: 40,
+            minValue: 0,
+            maxValue: 24,
+            circleThickness: 0.12
+        };
+
+        const gauge = d3.select('.gauge-container')
+            .append('svg')
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('viewBox', `0 0 ${config.width} ${config.height}`)
+            .attr('preserveAspectRatio', 'xMidYMid meet');
+
+        const radius = Math.min(config.width, config.height) / 2 - config.margin;
+        const centerX = config.width / 2;
+        const centerY = config.height / 2;
+
+        const backgroundArc = d3.arc()
+            .innerRadius(radius * (1 - config.circleThickness))
+            .outerRadius(radius)
+            .startAngle(0)
+            .endAngle(2 * Math.PI);
+
+        gauge.append('path')
+            .attr('transform', `translate(${centerX},${centerY})`)
+            .attr('d', backgroundArc)
+            .style('fill', 'var(--gauge-bg)');
+
+        const progressArc = d3.arc()
+            .innerRadius(radius * (1 - config.circleThickness))
+            .outerRadius(radius)
+            .startAngle(0);
+
+        const progressPath = gauge.append('path')
+            .attr('transform', `translate(${centerX},${centerY})`)
+            .style('fill', 'var(--gauge-progress)')
+            .style('transition', 'fill 0.3s ease');
+
+        let startTime = localStorage.getItem('fastingStartTime');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const editBtn = document.getElementById('editBtn');
+        const timeEdit = document.getElementById('timeEdit');
+        const startTimeInput = document.getElementById('startTimeInput');
+        const saveTimeBtn = document.getElementById('saveTimeBtn');
+        const timeElapsedSpan = document.getElementById('timeElapsed');
+        let animationFrameId;
+
+        function formatDateTime(timestamp) {
+            const date = new Date(parseInt(timestamp));
+            return date.toISOString().slice(0, 19);
+        }
+
+        function updateDisplay() {
+            if (!startTime) {
+                timeElapsedSpan.textContent = '00:00:00';
+                progressPath.attr('d', progressArc.endAngle(0));
+                return;
+            }
+
+            const elapsed = Date.now() - parseInt(startTime);
+            const hours = Math.floor(elapsed / 3600000);
+            const minutes = Math.floor((elapsed % 3600000) / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            const progress = Math.min(hours + minutes/60 + seconds/3600, 24);
+
+            timeElapsedSpan.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            const endAngle = (progress / 24) * 2 * Math.PI;
+            progressPath.attr('d', progressArc.endAngle(endAngle));
+
+            animationFrameId = requestAnimationFrame(updateDisplay);
+        }
+
+        function startFasting() {
+            if (!startTime) {
+                startTime = Date.now().toString();
+                localStorage.setItem('fastingStartTime', startTime);
+                updateButtonStates(true);
+                updateDisplay();
+            }
+        }
+
+        function resetFasting() {
+            startTime = null;
+            localStorage.removeItem('fastingStartTime');
+            updateButtonStates(false);
+            cancelAnimationFrame(animationFrameId);
+            updateDisplay();
+        }
+
+        function updateButtonStates(fasting) {
+            startBtn.textContent = fasting ? 'Fasting in Progress' : 'Start Fast';
+            startBtn.disabled = fasting;
+            editBtn.disabled = !fasting;
+        }
+
+        function toggleTimeEdit() {
+            timeEdit.classList.toggle('visible');
+            if (timeEdit.classList.contains('visible') && startTime) {
+                startTimeInput.value = formatDateTime(startTime);
+            }
+        }
+
+        function saveStartTime() {
+            const newStartTime = new Date(startTimeInput.value).getTime();
+            if (!isNaN(newStartTime)) {
+                startTime = newStartTime.toString();
+                localStorage.setItem('fastingStartTime', startTime);
+                timeEdit.classList.remove('visible');
+                updateDisplay();
+            }
+        }
+
+        startBtn.addEventListener('click', startFasting);
+        resetBtn.addEventListener('click', resetFasting);
+        editBtn.addEventListener('click', toggleTimeEdit);
+        saveTimeBtn.addEventListener('click', saveStartTime);
+
+        if (startTime) {
+            updateButtonStates(true);
+            updateDisplay();
+        } else {
+            updateButtonStates(false);
+            editBtn.disabled = true;
+        }
+    </script>
+</body>
+</html>

@@ -48,7 +48,6 @@
         }
 
         .speed-control {
-            xdisplay: flex;
             display: none;
             align-items: center;
             gap: 0.5rem;
@@ -622,8 +621,10 @@
                     return;
                 }
 
-                document.getElementById('noFastsMessage').style.display = 'none';
-                this.data.fasts.reverse().forEach(fast => { // Reverse the order of fasts
+                document.getElementById('noFastsMessage').style.display = 'none';                
+                
+                // Filter out the active fast (endTime is null) and then reverse the order
+                this.data.fasts.filter(fast => fast.endTime !== null).reverse().forEach(fast => { 
                     const row = tableBody.insertRow();
                     row.insertCell().textContent = new Date(fast.startTime).toLocaleString();
                     row.insertCell().textContent = new Date(fast.endTime).toLocaleString();

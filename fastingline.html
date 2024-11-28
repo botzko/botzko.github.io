@@ -248,11 +248,11 @@
     <div class="controls">
         <button id="startEditButton">Start Fasting</button>
         <button id="stopButton" disabled>Stop Fasting</button>
-        <div class="speed-control">
+<!--         <div class="speed-control">
             <label>Speed:</label>
             <button id="normalSpeed" class="speed-btn">1x</button>
             <button id="fastSpeed" class="speed-btn">100x</button>
-        </div>
+        </div> -->
     </div>
     <div class="timeline-container">
         <div class="current-time-indicator"></div>
@@ -489,16 +489,31 @@
         class FastingTracker {
             constructor() {
                 this.data = StorageService.getData();                
-                
+
+                this.initializeFastingState();
+
+                this.speedMultiplier = 1;
+
+                // Initialize buttons based on fasting state
+                this.updateButtonVisibility();
+            }
+
+            initializeFastingState() {
                 // Ensure this.data.fasts is initialized as an array
                 if (!Array.isArray(this.data.fasts)) {
                     this.data.fasts = [];
                 }
-                this.startTime = this.data.fasts.length > 0 && this.data.fasts[this.data.fasts.length - 1].endTime === null
-                    ? new Date(this.data.fasts[this.data.fasts.length - 1].startTime)
-                    : null;
-                this.speedMultiplier = 1;
-                this.isRunning = this.isFastingInProgress();
+
+                // Check for an active fast
+                const activeFast = this.data.fasts.find(fast => fast.endTime === null);
+
+                if (activeFast) {
+                    this.startTime = new Date(activeFast.startTime);
+                    this.isRunning = true; // Set isRunning to true if there's an active fast
+                } else {
+                    this.startTime = null;
+                    this.isRunning = false;
+                }
 
                 // Initialize buttons based on fasting state
                 this.updateButtonVisibility();
@@ -556,7 +571,8 @@
 
             startFasting() {
                 this.startTime = new Date();
-                StorageService.saveData(this.data);
+                this.data.fasts.push({ startTime: this.startTime.toISOString(), endTime: null, duration: null }); // Add new fast to the array
+                StorageService.saveData(this.data);                
                 this.isRunning = true;
 
                 this.updateButtonVisibility(); // Update button visibility
@@ -571,11 +587,15 @@
                 const endTime = new Date();
                 const duration = endTime - this.startTime;
 
-                this.data.fasts.push({
-                    startTime: this.startTime.toISOString(),
-                    endTime: endTime.toISOString(),
-                    duration: duration
-                });
+                // Find the active fast and update its endTime and duration
+                const activeFastIndex = this.data.fasts.findIndex(fast => fast.endTime === null);
+                if (activeFastIndex !== -1) {
+                    this.data.fasts[activeFastIndex].endTime = endTime.toISOString();
+                    this.data.fasts[activeFastIndex].duration = duration;
+                } else {
+                    // Handle the case where there's no active fast (shouldn't happen normally)
+                    console.error("No active fast found when stopping.");
+                }
 
                 StorageService.saveData(this.data);
 
@@ -641,11 +661,15 @@
             setupAnimation() {
                 setInterval(() => {
                     if (this.isFastingInProgress()) {
-                        const elapsed = (Date.now() - this.startTime) * this.speedMultiplier;
-                        document.getElementById('elapsedTime').textContent = TimeUtils.formatDuration(elapsed);                        
-                        this.updateTimeline(); 
+                        this.updateElapsedTime();
+                        this.updateTimeline();
                     }
                 }, CONFIG.ANIMATION_INTERVAL);
+            }
+
+            updateElapsedTime() {
+                const elapsed = (Date.now() - this.startTime) * this.speedMultiplier;
+                document.getElementById('elapsedTime').textContent = TimeUtils.formatDuration(elapsed);
             }
 
             updateTimeline() {

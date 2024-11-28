@@ -85,6 +85,7 @@
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 50px;
         }
 
         .timeline {
@@ -199,12 +200,53 @@
             margin-top: 1rem;
             line-height: 1.6;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .no-fasts {
+            text-align: center;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        .delete-button {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+        }
+
+        .confirmation-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
     <div class="elapsed-time" id="elapsedTime">00:00:00</div>
     <div class="controls">
-        <button id="startButton">Start Fasting</button>
+        <button id="startEditButton">Start Fasting</button>
         <button id="stopButton" disabled>Stop Fasting</button>
         <div class="speed-control">
             <label>Speed:</label>
@@ -217,18 +259,51 @@
         <div class="timeline" id="timeline"></div>
     </div>
 
+    <h2>Finished Fasts</h2>
+    <table id="fastsTable">
+        <thead>
+            <tr><th>Start Time</th><th>End Time</th><th>Duration</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="noFastsMessage" class="no-fasts">No finished fasts yet.</div>
+
     <div class="modal" id="modal">
         <div class="modal-content">
             <button class="close-modal" id="closeModal">
                 <span class="mdi mdi-close"></span>
             </button>
             <h2 id="modalTitle"></h2>
-            <p id="modalDescription"></p>
-            <div id="modalTimes" class="modal-times"></div>
+            <p class="elapsed-time" id="modalElapsedTime"></p>
         </div>
     </div>
 
+    <div class="modal" id="editStartTimeModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeEditStartTimeModal">
+                <span class="mdi mdi-close"></span>
+            </button>
+            <h2>Edit Start Time</h2>
+            <input type="datetime-local" id="newStartTimeInput">
+            <button id="confirmStartTimeEdit">Confirm</button>
+        </div>
+    </div>
+
+    <div class="confirmation-modal" id="confirmationModal">
+        <p>Are you sure you want to delete this entry?</p>
+        <button id="confirmDelete">Yes</button>
+        <button id="cancelDelete">No</button>
+    </div>
+
+    
+
     <script>
+        // ... (your existing JavaScript code) ...
+
+        let fastToDelete = null; // Store the fast entry to be deleted
+
+        // ... (your existing JavaScript code) ...
+
         const CONFIG = {
             STORAGE_KEY: 'fastingData',
             PIXEL_PER_HOUR: 100,
@@ -314,7 +389,7 @@
         class StorageService {
             static getData() {
                 const stored = localStorage.getItem(CONFIG.STORAGE_KEY);
-                return stored ? JSON.parse(stored) : { blocks: [], currentFasting: null };
+                return stored ? JSON.parse(stored) : { fasts: [] };
             }
 
             static saveData(data) {
@@ -397,18 +472,11 @@
         class Modal {
             static show(block) {
                 const modal = document.getElementById('modal');
-                document.getElementById('modalTitle').textContent = block.title;
-                document.getElementById('modalDescription').textContent = block.description;
+                document.getElementById('modalTitle').textContent = 'Congratulations!';
 
-                const start = new Date(block.startTime);
-                const end = block.endTime ? new Date(block.endTime) : new Date();
-                const duration = TimeUtils.formatDuration(end - start);
+                const elapsedTimeString = TimeUtils.formatDuration(block);
 
-                document.getElementById('modalTimes').innerHTML = `
-                    Start: ${start.toLocaleString()}<br>
-                    End: ${block.endTime ? end.toLocaleString() : 'Ongoing'}<br>
-                    Duration: ${duration}
-                `;
+                document.getElementById('modalElapsedTime').textContent = `You fasted for ${elapsedTimeString}.`;
 
                 modal.style.display = 'flex';
             }
@@ -420,28 +488,63 @@
 
         class FastingTracker {
             constructor() {
-                this.data = StorageService.getData();
-                this.isRunning = false;
-                this.startTime = this.data.currentFasting ? new Date(this.data.currentFasting.startTime) : new Date();
-                this.speedMultiplier = 1;
-
-                if (this.data.currentFasting) {
-                    this.isRunning = true;
-                    document.getElementById('startButton').disabled = true;
-                    document.getElementById('stopButton').disabled = false;
+                this.data = StorageService.getData();                
+                
+                // Ensure this.data.fasts is initialized as an array
+                if (!Array.isArray(this.data.fasts)) {
+                    this.data.fasts = [];
                 }
+                this.startTime = this.data.fasts.length > 0 && this.data.fasts[this.data.fasts.length - 1].endTime === null
+                    ? new Date(this.data.fasts[this.data.fasts.length - 1].startTime)
+                    : null;
+                this.speedMultiplier = 1;
+                this.isRunning = this.isFastingInProgress();
 
-                this.setupEventListeners();
-                this.setupAnimation();
-                this.updateTimeline();
+                // Initialize buttons based on fasting state
+                this.updateButtonVisibility();
+            }
+            
+            updateButtonVisibility() {
+                const startEditButton = document.getElementById('startEditButton');
+                const stopButton = document.getElementById('stopButton');
+
+                if (this.isFastingInProgress()) {
+                    startEditButton.textContent = 'Edit Start Time';
+                    stopButton.disabled = false;
+                } else {
+                    startEditButton.textContent = 'Start Fasting';
+                    stopButton.disabled = true;
+                }
+            }
+            
+
+            showEditStartTimeModal() {
+                const editStartTimeModal = document.getElementById('editStartTimeModal');
+                const newStartTimeInput = document.getElementById('newStartTimeInput');
+
+                // Set the current start time in the input field
+                newStartTimeInput.value = this.startTime.toISOString().slice(0, 16);
+
+                editStartTimeModal.style.display = 'flex';
             }
 
-            setupEventListeners() {
-                document.getElementById('startButton').addEventListener('click', () => this.startFasting());
-                document.getElementById('stopButton').addEventListener('click', () => this.stopFasting());
-                document.getElementById('closeModal').addEventListener('click', () => Modal.hide());
-                document.getElementById('normalSpeed').addEventListener('click', () => this.setSpeed(1));
-                document.getElementById('fastSpeed').addEventListener('click', () => this.setSpeed(100));
+            hideEditStartTimeModal() {
+                document.getElementById('editStartTimeModal').style.display = 'none';
+            }
+
+            confirmStartTimeEdit() {
+                const newStartTime = new Date(document.getElementById('newStartTimeInput').value);
+
+                // Update the start time of the current fast
+                this.startTime = newStartTime;
+                this.data.fasts[this.data.fasts.length - 1].startTime = newStartTime.toISOString();
+                StorageService.saveData(this.data);
+
+                // Update the UI
+                this.updateTimeline();
+                this.updateFastsTable();
+
+                this.hideEditStartTimeModal();
             }
 
             setSpeed(multiplier) {
@@ -452,30 +555,95 @@
             }
 
             startFasting() {
-                this.isRunning = true;
                 this.startTime = new Date();
-                this.data.currentFasting = null; // Remove the current fasting block logic
                 StorageService.saveData(this.data);
-                document.getElementById('startButton').disabled = true;
-                document.getElementById('stopButton').disabled = false;
+                this.isRunning = true;
+
+                this.updateButtonVisibility(); // Update button visibility
                 this.updateTimeline();
             }
 
+            isFastingInProgress() {
+                return this.startTime !== null;
+            }
+
             stopFasting() {
-                this.isRunning = false;
+                const endTime = new Date();
+                const duration = endTime - this.startTime;
+
+                this.data.fasts.push({
+                    startTime: this.startTime.toISOString(),
+                    endTime: endTime.toISOString(),
+                    duration: duration
+                });
+
                 StorageService.saveData(this.data);
-                document.getElementById('startButton').disabled = false;
-                document.getElementById('stopButton').disabled = true;
+
+                this.updateButtonVisibility(); // Update button visibility
+                this.isRunning = false;
+
                 document.getElementById('elapsedTime').textContent = '00:00:00';
+                this.startTime = null;
                 this.updateTimeline();
+                this.updateButtonVisibility(); // Ensure button text is updated
+                this.updateFastsTable();
+
+                // Display greeting with elapsed time
+                Modal.show(duration);
+            }
+
+            updateFastsTable() {
+                const tableBody = document.querySelector('#fastsTable tbody');
+                tableBody.innerHTML = '';
+
+                if (this.data.fasts.length === 0) {
+                    document.getElementById('noFastsMessage').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('noFastsMessage').style.display = 'none';
+                this.data.fasts.reverse().forEach(fast => { // Reverse the order of fasts
+                    const row = tableBody.insertRow();
+                    row.insertCell().textContent = new Date(fast.startTime).toLocaleString();
+                    row.insertCell().textContent = new Date(fast.endTime).toLocaleString();
+                    row.insertCell().textContent = TimeUtils.formatDuration(fast.duration);
+
+                    // Add delete button
+                    const deleteCell = row.insertCell();
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'delete-button';
+                    deleteButton.innerHTML = '<span class="mdi mdi-delete"></span>';
+
+                    
+                    deleteButton.addEventListener('click', () => {
+                        fastToDelete = fast; // Store the fast to be deleted
+                        document.getElementById('confirmationModal').style.display = 'block'; // Show the confirmation modal
+                    });
+                    
+                    // Event listeners for confirmation modal buttons
+                    document.getElementById('confirmDelete').addEventListener('click', () => {
+                        this.data.fasts = this.data.fasts.filter(f => f !== fastToDelete);
+                        StorageService.saveData(this.data);
+                        this.updateFastsTable();
+                        document.getElementById('confirmationModal').style.display = 'none'; // Hide the confirmation modal
+                        fastToDelete = null; // Reset fastToDelete
+                    });
+
+                    document.getElementById('cancelDelete').addEventListener('click', () => {
+                        document.getElementById('confirmationModal').style.display = 'none'; // Hide the confirmation modal
+                        fastToDelete = null; // Reset fastToDelete
+                    });
+
+                    deleteCell.appendChild(deleteButton);
+                });
             }
 
             setupAnimation() {
                 setInterval(() => {
-                    if (this.isRunning && this.startTime) {
-                        const elapsed = (Date.now() - this.startTime.getTime()) * this.speedMultiplier;
-                        document.getElementById('elapsedTime').textContent = TimeUtils.formatDuration(elapsed);
-                        this.updateTimeline();
+                    if (this.isFastingInProgress()) {
+                        const elapsed = (Date.now() - this.startTime) * this.speedMultiplier;
+                        document.getElementById('elapsedTime').textContent = TimeUtils.formatDuration(elapsed);                        
+                        this.updateTimeline(); 
                     }
                 }, CONFIG.ANIMATION_INTERVAL);
             }
@@ -485,7 +653,7 @@
                 timeline.innerHTML = '';
 
                 // Add minute ticks
-                for (let minute = 0; minute <= 48 * 60; minute += 10) {
+                for (let minute = 0; minute <= CONFIG.TIMELINE_RANGE * 60; minute += 10) {
                     const tickEl = TimelineBlock.createMinuteTick(minute);
                     timeline.appendChild(tickEl);
                 }
@@ -496,20 +664,21 @@
                     timeline.appendChild(tickEl);
                 }
 
-                // Calculate timeline offset
-                if (this.isRunning) {
-                    const elapsed = (Date.now() - this.startTime.getTime()) * this.speedMultiplier / (1000 * 60 * 60);
-                    const offset = -elapsed * CONFIG.PIXEL_PER_HOUR;
-                    timeline.style.transform = `translateX(${offset}px)`;
+                // Calculate timeline offset based on startTime
+                if (this.startTime) {
+                    const elapsedHours = (Date.now() - this.startTime) * this.speedMultiplier / (1000 * 60 * 60);                
+                    timeline.style.transform = `translateX(${-elapsedHours * CONFIG.PIXEL_PER_HOUR}px)`; 
                 } else {
-                    timeline.style.transform = 'translateX(0)';
+                    timeline.style.transform = 'translateX(0)'; 
                 }
 
                 // Add fasting phase blocks
                 CONFIG.SAMPLE_BLOCKS.forEach(block => {
+                    // Null check for startTime
+                    const safeStartTime = this.startTime ? this.startTime : new Date();
                     const blockEl = TimelineBlock.create(
                         block,
-                        this.startTime,
+                        safeStartTime,
                         Modal.show
                     );
                     timeline.appendChild(blockEl);
@@ -517,7 +686,33 @@
             }
         }
 
-        const tracker = new FastingTracker();
+        document.addEventListener('DOMContentLoaded', () => {
+            const tracker = new FastingTracker();
+            tracker.updateFastsTable();
+            tracker.updateTimeline(); // Render the timeline initially
+            tracker.setupAnimation();
+
+            // Setup event listeners
+            document.getElementById('startEditButton').addEventListener('click', () => {
+                if (tracker.isFastingInProgress()) {
+                    tracker.showEditStartTimeModal();
+                } else {
+                    tracker.startFasting();
+                }
+            });
+            document.getElementById('stopButton').addEventListener('click', () => tracker.stopFasting());
+            document.getElementById('closeModal').addEventListener('click', () => Modal.hide());
+            document.getElementById('normalSpeed').addEventListener('click', () => tracker.setSpeed(1));
+            document.getElementById('fastSpeed').addEventListener('click', () => tracker.setSpeed(100));
+            document.getElementById('closeEditStartTimeModal').addEventListener('click', () => tracker.hideEditStartTimeModal());
+            document.getElementById('confirmStartTimeEdit').addEventListener('click', () => tracker.confirmStartTimeEdit());
+            document.getElementById('confirmDelete').addEventListener('click', () => {
+                // ... (Existing delete confirmation logic)
+            });
+            document.getElementById('cancelDelete').addEventListener('click', () => {
+                // ... (Existing delete cancellation logic)
+            });
+        });
     </script>
 </body>
 </html>

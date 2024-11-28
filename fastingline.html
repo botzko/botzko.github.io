@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fasting Time Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2196f3;
+            --success-color: #4caf50;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --timeline-height: 100px;
+            --block-height: 40%;
+            --indicator-width: 2px;
+            --indicator-color: red;
+            --tick-color: #ddd;
+            --tick-width: 1px;
+            --tick-height: 10px;
+            --minute-tick-height: 5px;
+            --minute-tick-color: #eee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .controls {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+            padding: 0.5rem;
+            background: rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .timeline-container {
+            width: 100%;
+            height: var(--timeline-height);
+            position: relative;
+            overflow: hidden;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline {
+            position: absolute;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            will-change: transform;
+            transition: transform 1s linear;
+            left: 50%;
+        }
+
+        .timeline-block {
+            position: absolute;
+            min-width: 100px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.2s;
+            padding: 0 1rem;
+            text-align: center;
+            white-space: nowrap;
+            opacity: 0.8;
+        }
+
+        .timeline-block:hover {
+            transform: scale(1.05);
+            opacity: 1;
+            z-index: 3;
+        }
+
+        .current-time-indicator {
+            position: absolute;
+            left: 50%;
+            height: 100%;
+            width: var(--indicator-width);
+            background-color: var(--indicator-color);
+            z-index: 10;
+        }
+
+        .hour-tick {
+            position: absolute;
+            width: var(--tick-width);
+            height: var(--tick-height);
+            background-color: var(--tick-color);
+            bottom: 0;
+            transform: translateX(-50%);
+        }
+
+        .minute-tick {
+            position: absolute;
+            width: var(--tick-width);
+            height: var(--minute-tick-height);
+            background-color: var(--minute-tick-color);
+            bottom: 0;
+            transform: translateX(-50%);
+        }
+
+        .hour-label {
+            position: absolute;
+            bottom: calc(var(--tick-height) + 2px);
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .elapsed-time {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .modal-times {
+            margin-top: 1rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="elapsed-time" id="elapsedTime">00:00:00</div>
+    <div class="controls">
+        <button id="startButton">Start Fasting</button>
+        <button id="stopButton" disabled>Stop Fasting</button>
+        <div class="speed-control">
+            <label>Speed:</label>
+            <button id="normalSpeed" class="speed-btn">1x</button>
+            <button id="fastSpeed" class="speed-btn">100x</button>
+        </div>
+    </div>
+    <div class="timeline-container">
+        <div class="current-time-indicator"></div>
+        <div class="timeline" id="timeline"></div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">
+                <span class="mdi mdi-close"></span>
+            </button>
+            <h2 id="modalTitle"></h2>
+            <p id="modalDescription"></p>
+            <div id="modalTimes" class="modal-times"></div>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            STORAGE_KEY: 'fastingData',
+            PIXEL_PER_HOUR: 100,
+            PIXEL_PER_MINUTE: 100 / 60,
+            ANIMATION_INTERVAL: 1000,
+            TIMELINE_RANGE: 48,
+            SAMPLE_BLOCKS: [
+                {
+                    title: "Absorptive Phase",
+                    description: "Initial phase of fasting where body uses readily available glucose",
+                    color: "#2196f3",
+                    offsetHours: 0,
+                    durationHours: 4,
+                    height: "40%",
+                    top: "30%"
+                },
+                {
+                    title: "Early Fasting Phase",
+                    description: "Body begins to transition to using stored energy",
+                    color: "#4caf50",
+                    offsetHours: 4,
+                    durationHours: 4,
+                    height: "40%",
+                    top: "30%"
+                },
+                {
+                    title: "Glycogen Depletion",
+                    description: "Body's glycogen stores are depleted, and it begins to mobilize fat for energy.",
+                    color: "#ff9800",
+                    offsetHours: 8,
+                    durationHours: 4,
+                    height: "40%",
+                    top: "30%"
+                },
+                {
+                    title: "Ketone Production",
+                    description: "Liver starts producing ketones, an alternative fuel source for the brain and body.",
+                    color: "#f44336",
+                    offsetHours: 12,
+                    durationHours: 4,
+                    height: "40%",
+                    top: "30%"
+                },
+                {
+                    title: "Autophagy Activation",
+                    description: "Cellular recycling process begins, removing damaged cells and promoting regeneration.",
+                    color: "#9c27b0",
+                    offsetHours: 16,
+                    durationHours: 2,
+                    height: "40%",
+                    top: "30%"
+                },
+                {
+                    title: "Increased Fat Breakdown",
+                    description: "Fat breakdown accelerates, and growth hormone levels surge, promoting fat loss and muscle preservation.",
+                    color: "#673ab7",
+                    offsetHours: 18,
+                    durationHours: 6,
+                    height: "40%",
+                    top: "30%"
+                },
+                {
+                    title: "Deepened Ketosis",
+                    description: "Body enters a deeper state of ketosis, and cellular repair continues.",
+                    color: "#3f51b5",
+                    offsetHours: 24,
+                    durationHours: 6,
+                    height: "40%",
+                    top: "30%"
+                },
+                {
+                    title: "Enhanced Insulin Sensitivity",
+                    description: "Insulin sensitivity improves, and deep autophagy further enhances cellular cleanup.",
+                    color: "#00bcd4",
+                    offsetHours: 30,
+                    durationHours: 6,
+                    height: "40%",
+                    top: "30%"
+                }
+            ]
+        };
+
+        class StorageService {
+            static getData() {
+                const stored = localStorage.getItem(CONFIG.STORAGE_KEY);
+                return stored ? JSON.parse(stored) : { blocks: [], currentFasting: null };
+            }
+
+            static saveData(data) {
+                localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
+            }
+        }
+
+        class TimeUtils {
+            static formatDuration(ms) {
+                const seconds = Math.floor(Math.max(0, ms) / 1000);
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remainingSeconds = seconds % 60;
+                return [hours, minutes, remainingSeconds]
+                    .map(num => String(num).padStart(2, '0'))
+                    .join(':');
+            }
+
+            static calculatePosition(time, startTime) {
+                const hoursDiff = (time - startTime) / (1000 * 60 * 60);
+                return hoursDiff * CONFIG.PIXEL_PER_HOUR;
+            }
+
+            static formatHourLabel(hour) {
+                return `${hour}h`;
+            }
+        }
+
+        class TimelineBlock {
+            static create(block, startTime, onClick) {
+                const blockEl = document.createElement('div');
+                blockEl.className = 'timeline-block';
+                blockEl.style.backgroundColor = block.color;
+
+                const start = new Date(block.startTime || startTime.getTime() + block.offsetHours * 3600000);
+                const end = new Date(block.endTime || start.getTime() + (block.durationHours || 0) * 3600000);
+
+                const startPos = TimeUtils.calculatePosition(start, startTime);
+                const width = Math.abs(TimeUtils.calculatePosition(end, startTime) - startPos);
+
+                blockEl.style.left = `${startPos}px`;
+                blockEl.style.width = `${width}px`;
+                blockEl.style.height = block.height || '40%';
+                blockEl.style.top = block.top || '30%';
+                blockEl.textContent = block.title;
+                blockEl.addEventListener('click', () => onClick(block));
+
+                return blockEl;
+            }
+
+            static createHourTick(hour) {
+                const tickContainer = document.createElement('div');
+                const tick = document.createElement('div');
+                const label = document.createElement('div');
+
+                tick.className = 'hour-tick';
+                label.className = 'hour-label';
+
+                const position = hour * CONFIG.PIXEL_PER_HOUR;
+                tick.style.left = `${position}px`;
+                label.style.left = `${position}px`;
+
+                label.textContent = TimeUtils.formatHourLabel(hour);
+
+                tickContainer.appendChild(tick);
+                tickContainer.appendChild(label);
+
+                return tickContainer;
+            }
+
+            static createMinuteTick(minute) {
+                const tick = document.createElement('div');
+                tick.className = 'minute-tick';
+                const position = minute * CONFIG.PIXEL_PER_MINUTE;
+                tick.style.left = `${position}px`;
+                return tick;
+            }
+        }
+
+        class Modal {
+            static show(block) {
+                const modal = document.getElementById('modal');
+                document.getElementById('modalTitle').textContent = block.title;
+                document.getElementById('modalDescription').textContent = block.description;
+
+                const start = new Date(block.startTime);
+                const end = block.endTime ? new Date(block.endTime) : new Date();
+                const duration = TimeUtils.formatDuration(end - start);
+
+                document.getElementById('modalTimes').innerHTML = `
+                    Start: ${start.toLocaleString()}<br>
+                    End: ${block.endTime ? end.toLocaleString() : 'Ongoing'}<br>
+                    Duration: ${duration}
+                `;
+
+                modal.style.display = 'flex';
+            }
+
+            static hide() {
+                document.getElementById('modal').style.display = 'none';
+            }
+        }
+
+        class FastingTracker {
+            constructor() {
+                this.data = StorageService.getData();
+                this.isRunning = false;
+                this.startTime = this.data.currentFasting ? new Date(this.data.currentFasting.startTime) : new Date();
+                this.speedMultiplier = 1;
+
+                if (this.data.currentFasting) {
+                    this.isRunning = true;
+                    document.getElementById('startButton').disabled = true;
+                    document.getElementById('stopButton').disabled = false;
+                }
+
+                this.setupEventListeners();
+                this.setupAnimation();
+                this.updateTimeline();
+            }
+
+            setupEventListeners() {
+                document.getElementById('startButton').addEventListener('click', () => this.startFasting());
+                document.getElementById('stopButton').addEventListener('click', () => this.stopFasting());
+                document.getElementById('closeModal').addEventListener('click', () => Modal.hide());
+                document.getElementById('normalSpeed').addEventListener('click', () => this.setSpeed(1));
+                document.getElementById('fastSpeed').addEventListener('click', () => this.setSpeed(100));
+            }
+
+            setSpeed(multiplier) {
+                this.speedMultiplier = multiplier;
+                document.querySelectorAll('.speed-btn').forEach(btn => {
+                    btn.style.opacity = btn.id === (multiplier === 1 ? 'normalSpeed' : 'fastSpeed') ? '1' : '0.5';
+                });
+            }
+
+            startFasting() {
+                this.isRunning = true;
+                this.startTime = new Date();
+                this.data.currentFasting = null; // Remove the current fasting block logic
+                StorageService.saveData(this.data);
+                document.getElementById('startButton').disabled = true;
+                document.getElementById('stopButton').disabled = false;
+                this.updateTimeline();
+            }
+
+            stopFasting() {
+                this.isRunning = false;
+                StorageService.saveData(this.data);
+                document.getElementById('startButton').disabled = false;
+                document.getElementById('stopButton').disabled = true;
+                document.getElementById('elapsedTime').textContent = '00:00:00';
+                this.updateTimeline();
+            }
+
+            setupAnimation() {
+                setInterval(() => {
+                    if (this.isRunning && this.startTime) {
+                        const elapsed = (Date.now() - this.startTime.getTime()) * this.speedMultiplier;
+                        document.getElementById('elapsedTime').textContent = TimeUtils.formatDuration(elapsed);
+                        this.updateTimeline();
+                    }
+                }, CONFIG.ANIMATION_INTERVAL);
+            }
+
+            updateTimeline() {
+                const timeline = document.getElementById('timeline');
+                timeline.innerHTML = '';
+
+                // Add minute ticks
+                for (let minute = 0; minute <= 48 * 60; minute += 10) {
+                    const tickEl = TimelineBlock.createMinuteTick(minute);
+                    timeline.appendChild(tickEl);
+                }
+
+                // Add hour ticks
+                for (let hour = 0; hour <= 48; hour++) {
+                    const tickEl = TimelineBlock.createHourTick(hour);
+                    timeline.appendChild(tickEl);
+                }
+
+                // Calculate timeline offset
+                if (this.isRunning) {
+                    const elapsed = (Date.now() - this.startTime.getTime()) * this.speedMultiplier / (1000 * 60 * 60);
+                    const offset = -elapsed * CONFIG.PIXEL_PER_HOUR;
+                    timeline.style.transform = `translateX(${offset}px)`;
+                } else {
+                    timeline.style.transform = 'translateX(0)';
+                }
+
+                // Add fasting phase blocks
+                CONFIG.SAMPLE_BLOCKS.forEach(block => {
+                    const blockEl = TimelineBlock.create(
+                        block,
+                        this.startTime,
+                        Modal.show
+                    );
+                    timeline.appendChild(blockEl);
+                });
+            }
+        }
+
+        const tracker = new FastingTracker();
+    </script>
+</body>
+</html>

@@ -48,7 +48,7 @@
         }
 
         .speed-control {
-            display: none;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
             margin-left: 1rem;
@@ -241,6 +241,18 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
+
+        .details-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -276,6 +288,16 @@
             <h2 id="modalTitle"></h2>
             <p class="elapsed-time" id="modalElapsedTime"></p>
         </div>
+    </div>
+
+    <div class="modal details-modal" id="detailsModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeDetailsModal">
+                <span class="mdi mdi-close"></span>
+            </button>
+            <h2 id="detailsModalTitle"></h2>
+            <p id="detailsModalDescription"></p>
+        </div>    
     </div>
 
     <div class="modal" id="editStartTimeModal">
@@ -486,13 +508,26 @@
             }
         }
 
+        class DetailsModal {
+            static show(block) {
+                const modal = document.getElementById('detailsModal');
+                document.getElementById('detailsModalTitle').textContent = block.title;
+                document.getElementById('detailsModalDescription').textContent = block.description;
+                modal.style.display = 'flex';
+            }
+
+            static hide() {
+                document.getElementById('detailsModal').style.display = 'none';
+            }
+        }
+
         class FastingTracker {
             constructor() {
                 this.data = StorageService.getData();                
 
                 this.initializeFastingState();
 
-                this.speedMultiplier = 1;
+                this.speedMultiplier = 1;                
 
                 // Initialize buttons based on fasting state
                 this.updateButtonVisibility();
@@ -623,7 +658,7 @@
 
                 document.getElementById('noFastsMessage').style.display = 'none';                
                 
-                // Filter out the active fast (endTime is null) and then reverse the order
+                // Filter out the active fast (endTime is null) and then reverse the order to show newest first
                 this.data.fasts.filter(fast => fast.endTime !== null).reverse().forEach(fast => { 
                     const row = tableBody.insertRow();
                     row.insertCell().textContent = new Date(fast.startTime).toLocaleString();
@@ -705,7 +740,7 @@
                     const blockEl = TimelineBlock.create(
                         block,
                         safeStartTime,
-                        Modal.show
+                        DetailsModal.show // Pass DetailsModal.show as the callback
                     );
                     timeline.appendChild(blockEl);
                 });
@@ -728,6 +763,7 @@
             });
             document.getElementById('stopButton').addEventListener('click', () => tracker.stopFasting());
             document.getElementById('closeModal').addEventListener('click', () => Modal.hide());
+            document.getElementById('closeDetailsModal').addEventListener('click', () => DetailsModal.hide());
             document.getElementById('normalSpeed').addEventListener('click', () => tracker.setSpeed(1));
             document.getElementById('fastSpeed').addEventListener('click', () => tracker.setSpeed(100));
             document.getElementById('closeEditStartTimeModal').addEventListener('click', () => tracker.hideEditStartTimeModal());

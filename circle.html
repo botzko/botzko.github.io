@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Progress Bar with Clock</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .progress-bar {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            /* transform: rotate(-90deg); */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            top: 10%;
+            left: 10%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .clock {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .slider-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .slider {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="clock" id="clock">00:00:00</div>
+    </div>
+    <div class="slider-container">
+        <input type="range" min="0" max="36" value="0" class="slider" id="slider">
+    </div>
+
+    <script>
+        const SAMPLE_BLOCKS = [
+            {
+                title: "Absorptive Phase",
+                color: "#2196f3",
+                offsetHours: 0,
+                durationHours: 4
+            },
+            {
+                title: "Early Fasting Phase",
+                color: "#4caf50",
+                offsetHours: 4,
+                durationHours: 4
+            },
+            {
+                title: "Glycogen Depletion",
+                color: "#ff9800",
+                offsetHours: 8,
+                durationHours: 4
+            },
+            {
+                title: "Ketone Production",
+                color: "#f44336",
+                offsetHours: 12,
+                durationHours: 4
+            },
+            {
+                title: "Autophagy Activation",
+                color: "#9c27b0",
+                offsetHours: 16,
+                durationHours: 2
+            },
+            {
+                title: "Increased Fat Breakdown",
+                color: "#673ab7",
+                offsetHours: 18,
+                durationHours: 6
+            },
+            {
+                title: "Deepened Ketosis",
+                color: "#3f51b5",
+                offsetHours: 24,
+                durationHours: 6
+            },
+            {
+                title: "Enhanced Insulin Sensitivity",
+                color: "#00bcd4",
+                offsetHours: 30,
+                durationHours: 6
+            }
+        ];
+
+        const progressBar = document.getElementById('progressBar');
+        const clock = document.getElementById('clock');
+        const slider = document.getElementById('slider');
+
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            clock.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function updateProgressBar() {
+            const value = slider.value;
+            const degrees = (value / 72) * 360;
+
+            let gradient = `conic-gradient(`;
+            let currentDegree = 0;
+
+            SAMPLE_BLOCKS.forEach(block => {
+                const blockStart = (block.offsetHours / 72) * 720;
+                const blockEnd = blockStart + ((block.durationHours / 72) * 720);
+
+                if (value < block.offsetHours) {
+                    // Slider hasn't reached this block yet
+                    return;
+                } else if (value < block.offsetHours + block.durationHours) {
+                    // Slider is within this block
+                    const blockProgress = value - block.offsetHours;
+                    const blockDegreeProgress = (blockProgress / 72) * 360 * (block.durationHours / block.durationHours);
+                    gradient += `${block.color} ${currentDegree}deg ${blockStart + blockDegreeProgress}deg,`;
+                    currentDegree = blockStart + blockDegreeProgress;
+                } else {
+                    // Slider has passed this block
+                    gradient += `${block.color} ${currentDegree}deg ${blockEnd}deg,`;
+                    currentDegree = blockEnd;
+                }
+            });
+
+            // Fill remaining degrees with lightgray up to current degree
+            gradient += `lightgray ${currentDegree}deg ${degrees}deg,`;
+            // Fill beyond current degree with transparent
+            gradient += `transparent ${degrees}deg 720deg)`;
+
+            progressBar.style.background = gradient;
+        }
+
+        slider.addEventListener('input', updateProgressBar);
+
+        setInterval(updateClock, 1000);
+        updateClock();
+        updateProgressBar();
+    </script>
+</body>
+</html>

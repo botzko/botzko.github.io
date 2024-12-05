@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fasting Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .timeline {
+            display: flex;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+        }
+        .hour-block {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            position: relative;
+        }
+        .hour-block:last-child {
+            border-right: none;
+        }
+        .hour-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+        }
+        .event {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .state1 {
+            background-color: #ffcccc;
+        }
+        .state2 {
+            background-color: #ccffcc;
+        }
+        .state3 {
+            background-color: #ccffff;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Fasting Tracker</h1>
+<div id="timeline"></div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+    // Define the events for each hour during the fast.
+    const fastingEvents = [
+        { hour: 1, state: 'Digestion Wind Down', bodyStatus: 'Your digestive system slows down.' },
+        { hour: 2, state: 'Energy Shift', bodyStatus: 'Your body starts using stored glycogen.' },
+        { hour: 3, state: 'Glycogen Depletion', bodyStatus: 'Stored glycogen in your muscles is depleted.' },
+        { hour: 4, state: 'Ketosis Entrance', bodyStatus: 'Your body enters ketosis, burning fat for energy.' },
+        { hour: 5, state: 'Fat Utilization', bodyStatus: 'Deeper fat utilization becomes more efficient.' },
+        { hour: 6, state: 'Improved Insulin Sensitivity', bodyStatus: 'Insulin sensitivity improves significantly.' },
+        { hour: 7, state: 'Stress Hormone Reduction', bodyStatus: 'Stress hormone levels reduce.' },
+        { hour: 8, state: 'Autophagy', bodyStatus: 'Autophagy (cellular clean-up) increases.' },
+        { hour: 9, state: 'Cortisol Peaks', bodyStatus: 'Cortisol peaks, but should drop by hour 10.' },
+        { hour: 10, state: 'Cellular Repair', bodyStatus: 'Cells begin to repair and regrow.' },
+        { hour: 11, state: 'Erythropoietin Increase', bodyStatus: 'Erythropoietin, a hormone that triggers production of red blood cells, increases.' },
+        { hour: 12, state: 'Human Growth Hormone Increase', bodyStatus: 'Human growth hormone levels increase, breaking down muscle and fat.' },
+        { hour: 13, state: 'Brain and Nerve Function', bodyStatus: 'Brain and nerve function may improve as more ketones are available.' },
+        { hour: 14, state: 'Increased Metabolisms', bodyStatus: 'Metabolism increases significantly and continuously.' },
+        { hour: 15, state: 'Tissue Cleansing', bodyStatus: 'Tissue cleansing processes intensify.' },
+        { hour: 16, state: 'Protein Turnover', bodyStatus: 'Protein turnover increases as your body enters catabolic state.' },
+        { hour: 17, state: 'Enhanced Neurogenesis', bodyStatus: 'Enhanced neurogenesis and autophagy.' },
+        { hour: 18, state: 'Excretion Processes', bodyStatus: 'Better excretion of toxins, waste, and mucus.' },
+        { hour: 19, state: 'Improved Liver Function', bodyStatus: 'Liver function improves and regenerates.' },
+        { hour: 20, state: 'Increased Fat Burning', bodyStatus: 'Increased fat burning.' },
+        { hour: 21, state: 'Better Circulation', bodyStatus: 'Better circulation.' },
+        { hour: 22, state: 'Reduced Inflammation', bodyStatus: 'Reduced inflammation.' },
+        { hour: 23, state: 'Improved Longevity', bodyStatus: 'Potential for longer lifespan due to cellular repair.' },
+        { hour: 24, state: 'Max Ketosis', bodyStatus: 'Maximum ketosis is reached, burning only fat for energy.' }
+    ];
+
+    const container = d3.select("#timeline");
+
+    const timeline = container.selectAll(".hour-block")
+        .data(fastingEvents)
+        .enter().append("div")
+        .attr("class", d => `hour-block ${d.hour % 3 === 0 ? 'state3' : d.hour % 2 === 0 ? 'state2' : 'state1'}`)
+        .html(d => `<div class="event">${d.bodyStatus}</div>`);
+
+    timeline.append("div")
+        .attr("class", "hour-label")
+        .text(d => `${d.hour}h`);
+
+</script>
+
+</body>
+</html>

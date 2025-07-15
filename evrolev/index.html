@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Валутен Калкулатор - EUR към BGN</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="converter-wrapper">
+            <div class="converter-header">
+                <h1>Валутен Конвертор</h1>
+            </div>
+            <div class="converter-body">
+                <div class="currency-field">
+                    <label for="eur">ЕВРО</label>
+                    <input type="text" id="eur" placeholder="0.00" readonly>
+                </div>
+                <div class="swap-icon-container">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="currency-field">
+                    <label for="bgn">ЛЕВА</label>
+                    <input type="text" id="bgn" placeholder="0.00" readonly>
+                </div>
+            </div>
+        </div>
+        <div id="keyboard">
+            <button class="key" data-key="1">1</button>
+            <button class="key" data-key="2">2</button>
+            <button class="key" data-key="3">3</button>
+            <button class="key" data-key="4">4</button>
+            <button class="key" data-key="5">5</button>
+            <button class="key" data-key="6">6</button>
+            <button class="key" data-key="7">7</button>
+            <button class="key" data-key="8">8</button>
+            <button class="key" data-key="9">9</button>
+            <button class="key" data-key=".">.</button>
+            <button class="key" data-key="0">0</button>
+            <button class="key" data-key="C"><i class="fas fa-backspace"></i></button>
+            <button class="key clear-all-key" data-key="AC">Изчисти Всичко</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

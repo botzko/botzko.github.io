@@ -69,9 +69,9 @@ function updateConversion() {
 
     // Perform the conversion based on the active input
     if (sourceInput === eurInput) {
-        targetInput.value = (numericValue * exchangeRate).toFixed(4);
+        targetInput.value = (numericValue * exchangeRate).toFixed(2);
     } else {
-        targetInput.value = (numericValue / exchangeRate).toFixed(4);
+        targetInput.value = (numericValue / exchangeRate).toFixed(2);
     }
 }
 

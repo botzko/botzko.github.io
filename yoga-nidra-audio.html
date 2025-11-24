@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Йога Нидра Медитация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #5a67d8;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        input[type="range"] {
+            padding: 0;
+        }
+
+        .slider-value {
+            text-align: right;
+            color: #718096;
+            font-size: 13px;
+            margin-top: -5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #playBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        #playBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #stopBtn {
+            background: #fc8181;
+            color: white;
+        }
+
+        #stopBtn:hover {
+            background: #f56565;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            background: #edf2f7;
+            border-radius: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .text-content {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            line-height: 1.8;
+            color: #2d3748;
+        }
+
+        .text-content p {
+            margin-bottom: 15px;
+        }
+
+        .note {
+            background: #fff5f5;
+            border-left: 4px solid #fc8181;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #742a2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧘‍♀️ Йога Нидра Медитация</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="voiceSelect">Изберете глас:</label>
+                <select id="voiceSelect"></select>
+            </div>
+
+            <div class="control-group">
+                <label for="rateSlider">Скорост на речта (по-ниско = по-бавно):</label>
+                <input type="range" id="rateSlider" min="0.3" max="1" step="0.05" value="0.6">
+                <div class="slider-value" id="rateValue">0.6</div>
+            </div>
+
+            <div class="control-group">
+                <label for="pitchSlider">Височина на гласа (по-ниско = по-дълбок):</label>
+                <input type="range" id="pitchSlider" min="0.5" max="1.2" step="0.05" value="0.85">
+                <div class="slider-value" id="pitchValue">0.85</div>
+            </div>
+
+            <div class="control-group">
+                <label for="volumeSlider">Сила на звука:</label>
+                <input type="range" id="volumeSlider" min="0.3" max="1" step="0.05" value="0.75">
+                <div class="slider-value" id="volumeValue">0.75</div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="playBtn">▶️ Пусни медитация</button>
+            <button id="stopBtn" disabled>⏹️ Спри</button>
+        </div>
+
+        <div class="status" id="status">Готов за възпроизвеждане</div>
+
+        <div class="text-content" id="textContent"></div>
+
+        <div class="note">
+            <strong>Забележка:</strong> Това приложение използва вградения speech synthesis на браузъра. Качеството на гласа зависи от наличните гласове в операционната ви система. За най-добър резултат използвайте Chrome с инсталирани български гласове.
+        </div>
+    </div>
+
+    <script>
+        const meditationText = [
+            "Добре дошли в тази бърза сесия за дълбока релаксация и възстановяване. Аз съм Вашият Йога водач и ще ви водя през тази йога нидра, докато се къпете в успокояващия звук на кафявия шум.",
+            "Настанете се удобно легнали по гръб във поза Шавасана. Изпънете краката си леко встрани, ръцете са до тялото с длани обърнати нагоре. Затворете очи нежно и се уверете, че ви е напълно комфортно. Няма нужда да правите нищо друго, освен да слушате и да се отпуснете.",
+            "Оставете тялото ви да потъне. Почувствайте тежестта си върху пода. Позволете на всяко напрежение да се стопи и да изтече навън.",
+            "Ще преместим съзнанието си през различни части на тялото. Просто назовавам частта и вие премествате вниманието си там. Няма нужда да я движите, просто я почувствайте.",
+            "Преместете вниманието си към палеца на дясната ръка... показалецът... средният пръст... безименният пръст... кутрето... дясна длан... китка... предмишница... лакът... горна част на ръката... дясно рамо... дясна подмишница... дясната част на таза... дясно бедро... коляно... прасец... глезен... пета... стъпало... палецът на десния крак... втори пръст... трети... четвърти... малкият пръст.",
+            "Преместете вниманието си към палеца на лявата ръка... показалецът... средният пръст... безименният пръст... кутрето... лява длан... китка... предмишница... лакът... горна част на ръката... ляво рамо... лява подмишница... лявата част на таза... ляво бедро... коляно... прасец... глезен... пета... стъпало... палецът на левия крак... втори пръст... трети... четвърти... малкият пръст.",
+            "Задната част на тялото. Дясна плешка... лява плешка... целият гръбнак... дясна част на таза... лява част на таза... цялата задна част на тялото.",
+            "Върхът на главата... челото... дясното око... лявото око... дясната ноздра... лявата ноздра... дясната буза... лявата буза... устните... брадичката... Цялото лице. Цялата глава.",
+            "Осъзнайте цялото тяло... Цялото тяло в контакт с пода... Цялото тяло, абсолютно неподвижно и релаксирано.",
+            "Благодаря ви, че практикувахте с мен. Носете тази дълбока релаксация и мир със себе си през останалата част от деня."
+        ];
+
+        let synth = window.speechSynthesis;
+        let voices = [];
+        let currentUtterance = null;
+        let currentParagraph = 0;
+
+        // Display text
+        const textContainer = document.getElementById('textContent');
+        meditationText.forEach(paragraph => {
+            const p = document.createElement('p');
+            p.textContent = paragraph;
+            textContainer.appendChild(p);
+        });
+
+        // Load voices
+        function loadVoices() {
+            voices = synth.getVoices();
+            const voiceSelect = document.getElementById('voiceSelect');
+            voiceSelect.innerHTML = '';
+
+            // Filter Bulgarian voices first, then all voices
+            const bgVoices = voices.filter(voice => voice.lang.startsWith('bg'));
+            const otherVoices = voices.filter(voice => !voice.lang.startsWith('bg'));
+
+            if (bgVoices.length > 0) {
+                const bgGroup = document.createElement('optgroup');
+                bgGroup.label = 'Български гласове';
+                bgVoices.forEach((voice, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `${voice.name} (${voice.lang})`;
+                    bgGroup.appendChild(option);
+                });
+                voiceSelect.appendChild(bgGroup);
+            }
+
+            if (otherVoices.length > 0) {
+                const otherGroup = document.createElement('optgroup');
+                otherGroup.label = 'Други гласове';
+                voices.forEach((voice, index) => {
+                    if (!voice.lang.startsWith('bg')) {
+                        const option = document.createElement('option');
+                        option.value = index;
+                        option.textContent = `${voice.name} (${voice.lang})`;
+                        otherGroup.appendChild(option);
+                    }
+                });
+                voiceSelect.appendChild(otherGroup);
+            }
+
+            // Select first Bulgarian voice by default
+            if (bgVoices.length > 0) {
+                voiceSelect.value = voices.indexOf(bgVoices[0]);
+            }
+        }
+
+        // Update slider values
+        document.getElementById('rateSlider').addEventListener('input', (e) => {
+            document.getElementById('rateValue').textContent = e.target.value;
+        });
+
+        document.getElementById('pitchSlider').addEventListener('input', (e) => {
+            document.getElementById('pitchValue').textContent = e.target.value;
+        });
+
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            document.getElementById('volumeValue').textContent = e.target.value;
+        });
+
+        // Speak function
+        function speakParagraph(index) {
+            if (index >= meditationText.length) {
+                document.getElementById('status').textContent = 'Медитацията приключи ✨';
+                document.getElementById('playBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                currentParagraph = 0;
+                return;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(meditationText[index]);
+            currentUtterance = utterance;
+
+            const voiceSelect = document.getElementById('voiceSelect');
+            const selectedVoice = voices[voiceSelect.value];
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+
+            utterance.rate = parseFloat(document.getElementById('rateSlider').value);
+            utterance.pitch = parseFloat(document.getElementById('pitchSlider').value);
+            utterance.volume = parseFloat(document.getElementById('volumeSlider').value);
+            utterance.lang = 'bg-BG';
+
+            utterance.onstart = () => {
+                document.getElementById('status').textContent = `Изпълнява се параграф ${index + 1} от ${meditationText.length}`;
+            };
+
+            utterance.onend = () => {
+                currentParagraph = index + 1;
+                // Add pause between paragraphs (2 seconds)
+                setTimeout(() => {
+                    speakParagraph(currentParagraph);
+                }, 2000);
+            };
+
+            utterance.onerror = (event) => {
+                console.error('Speech error:', event);
+                document.getElementById('status').textContent = 'Грешка при възпроизвеждане';
+                document.getElementById('playBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+            };
+
+            synth.speak(utterance);
+        }
+
+        // Play button
+        document.getElementById('playBtn').addEventListener('click', () => {
+            document.getElementById('playBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            speakParagraph(currentParagraph);
+        });
+
+        // Stop button
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            synth.cancel();
+            document.getElementById('status').textContent = 'Спряно';
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            currentParagraph = 0;
+        });
+
+        // Load voices
+        loadVoices();
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = loadVoices;
+        }
+    </script>
+</body>
+</html>

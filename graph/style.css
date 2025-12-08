@@ -8,7 +8,7 @@
             --bar-fill-color: #5CB85C; /* A pleasant green */
             --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.05); /* Softer shadow */
             --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.1); /* Slightly more prominent shadow */
-            --bar-label-color: #FFFFFF;
+            --bar-label-color: #000000;
             --button-hover-darken: 10%; /* Percentage to darken buttons on hover */
         }
 

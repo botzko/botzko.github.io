@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Графика</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="card">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Име на продукт</th>
+                        <th>Начало</th>
+                        <th>Край</th>
+                        <th>Етикет</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"> 
+                    </tbody>
+            </table>
+            <div class="button-group">
+                <button class="draw-button" onclick="saveData(); drawChart()">Актуализиране и записване</button>
+                <button class="action-button add-row-button" onclick="addRow()">+ Добавяне на ред</button>
+                <button class="action-button remove-row-button" onclick="removeRow()">- Изтриване на последен</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Настройки на диаграмата</h2>
+            <div class="chart-options">
+                <div class="form-group">
+                    <label for="chart-headline">Заглавие на диаграмата:</label>
+                    <input type="text" id="chart-headline" oninput="drawChart()">
+                </div>
+                <div class="form-group">
+                    <label for="x-axis-headline">Заглавие на X-ос:</label>
+                    <input type="text" id="x-axis-headline" oninput="drawChart()">
+                </div>
+            </div>
+        </div>
+
+        <div id="chart-container" class="card">
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
+                <a href="#" id="download-png-link" class="subtle-download-link">свали диаграмата</a>
+            </div>
+            
+            <div id="chart">
+                </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

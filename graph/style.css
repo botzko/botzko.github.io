@@ -1,0 +1,258 @@
+        /* --- CSS Variables for Modern Theming --- */
+        :root {
+            --primary-color: #4A90E2; /* A more modern blue */
+            --secondary-color: #F8F8F8; /* Light gray for background */
+            --text-color: #333333; /* Darker text for readability */
+            --background-color: #FFFFFF; /* White for cards */
+            --border-color: #E0E0E0; /* Light gray border */
+            --bar-fill-color: #5CB85C; /* A pleasant green */
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.05); /* Softer shadow */
+            --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.1); /* Slightly more prominent shadow */
+            --bar-label-color: #FFFFFF;
+            --button-hover-darken: 10%; /* Percentage to darken buttons on hover */
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Modern font stack */
+            padding: 30px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top */
+            min-height: 100vh;
+        }
+
+        .main-container {
+            max-width: 850px;
+            width: 100%;
+            margin: 0 auto; /* Center the main content */
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-weight: 700; /* Bolder for prominence */
+            font-size: 2.2em;
+            text-align: center; /* Center the main title */
+        }
+
+        h2 {
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        /* --- Card Design Pattern --- */
+        .card {
+            background-color: var(--background-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            padding: 25px;
+            margin-bottom: 25px; /* Slightly less margin */
+            transition: box-shadow 0.3s ease; /* Smooth shadow transition */
+        }
+        .card:hover {
+            box-shadow: var(--shadow-medium); /* Emphasize on hover */
+        }
+        
+        /* --- Form Group Styling (for new options) --- */
+        .chart-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .form-group label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .form-group input {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-group input:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: transparent;
+        }
+
+
+        /* --- Table & Button Styling --- */
+        #dataTable { 
+            width: 100%; 
+            border-collapse: separate; /* Allows for border-radius on cells if needed */
+            border-spacing: 0;
+            font-size: 14px; 
+            margin-bottom: 20px;
+        }
+        #dataTable th { 
+            background-color: var(--primary-color); 
+            color: white; 
+            padding: 12px 15px; 
+            border: none; 
+            text-align: left;
+            font-weight: 600;
+        }
+        #dataTable th:first-child { border-top-left-radius: 8px; }
+        #dataTable th:last-child { border-top-right-radius: 8px; }
+        #dataTable td { 
+            border-bottom: 1px solid var(--border-color); 
+            padding: 12px 15px; 
+            transition: background-color 0.2s ease;
+            white-space: normal;
+            word-break: break-word;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 200px;
+        }
+        #dataTable tr:last-child td { border-bottom: none; } /* No border on last row */
+
+        #dataTable td[contenteditable="true"] { 
+            background-color: #FFFDE7; /* Light yellow for editable cells */
+            border-bottom: 1px solid #FFECB3;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        #dataTable td[contenteditable="true"]:focus {
+            outline: 2px solid var(--primary-color);
+            background-color: #E3F2FD; /* Lighter blue on focus */
+        }
+
+        .button-group { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 20px; 
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+            justify-content: flex-end; /* Align buttons to the right */
+        }
+        
+        /* General button styles (for draw and action buttons) */
+        .draw-button, .action-button {
+            padding: 12px 20px; /* Slightly more padding */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px; /* Slightly larger font */
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            user-select: none; /* Prevent text selection */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .draw-button { 
+            background-color: var(--bar-fill-color); 
+            flex-grow: 1; /* Allow to grow */
+            max-width: 250px; /* Limit max width */
+        }
+        .draw-button:hover { background-color: #4CAF50; /* Darker green */ transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); }
+        .draw-button:active { transform: translateY(0); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+
+        .action-button { background-color: #6c757d; } /* Bootstrap's secondary gray */
+        .action-button:hover { background-color: #5a6268; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); }
+        .action-button:active { transform: translateY(0); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+
+
+        /* --- D3.js SVG Styling --- */
+        #chart-container {
+            position: relative;
+            box-shadow: var(--shadow-medium);
+            padding: 25px; /* Consistent padding */
+            padding-top: 15px;
+            border-radius: 12px;
+            background-color: var(--background-color);
+            overflow: auto; /* Enable scroll if content overflows */
+        }
+        
+        #chart {
+            background-color: #FFFFFF; /* Explicitly set background for PNG download */
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-anchor: middle;
+        }
+
+        .x-axis-title {
+            font-size: 14px;
+            text-anchor: middle;
+        }
+
+        .bar { 
+            fill: var(--bar-fill-color); 
+            transition: fill 0.3s ease, opacity 0.3s ease; 
+            cursor: pointer;
+        }
+        .bar:hover { 
+            fill: #4CAF50; /* Darker green on hover */
+            opacity: 0.9;
+        }
+        .bar-label { 
+            fill: var(--bar-label-color); 
+            font-size: 12px; /* Slightly larger font */
+            font-weight: 500; 
+            text-anchor: middle; 
+            pointer-events: none; /* Allows mouse events to pass through to the bar */
+            transition: fill 0.3s ease;
+        }
+        .bar-label.outside { /* Style for labels moved outside */
+            fill: var(--text-color);
+            text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; /* Outline for readability on busy backgrounds */
+        }
+
+        .axis line, .axis path { 
+            stroke: var(--border-color); /* Lighter axis lines */
+            stroke-width: 1; 
+        }
+        .axis text { 
+            fill: var(--text-color); 
+            font-size: 11px; /* Slightly larger axis text */
+        }
+        .axis .domain {
+            stroke: var(--text-color); /* Make the main axis line darker */
+            stroke-width: 1.5;
+        }
+        
+        /* Subtle text download link */
+        .subtle-download-link {
+            font-size: 14px;
+            color: #888; /* Subtle gray color */
+            text-decoration: none; /* No underline by default */
+            transition: color 0.3s ease, background-color 0.3s ease;
+            padding: 5px 10px; /* Added padding */
+            border-radius: 4px; /* Slightly rounded corners */
+            margin-left: 10px; /* Space from potential h2 */
+        }
+        .subtle-download-link:hover {
+            color: var(--text-color); /* Darker on hover */
+            background-color: var(--secondary-color); /* Subtle background on hover */
+            text-decoration: none; /* No underline on hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .main-container { padding: 0; } /* Remove padding on main-container for small screens */
+            .card { padding: 20px; margin-bottom: 20px; }
+            h1 { font-size: 1.8em; margin-bottom: 20px; }
+            h2 { font-size: 1.3em; }
+            .button-group { justify-content: center; }
+            .draw-button { max-width: none; }
+            #dataTable th, #dataTable td { padding: 10px 8px; font-size: 13px; }
+        }
+
+        @media (max-width: 480px) {
+            .button-group { flex-direction: column; }
+            .draw-button, .action-button { width: 100%; max-width: none; }
+        }

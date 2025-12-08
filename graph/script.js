@@ -212,7 +212,7 @@
             const yScale = d3.scaleBand()
                 .domain(data.map(d => d.name))
                 .range([0, innerHeight])
-                .padding(0.3);
+                .padding(0.6);
 
             // Draw X-axis
             svg.append('g')
@@ -252,41 +252,23 @@
                 .attr('rx', 4) 
                 .attr('x', d => xScale(Math.min(d.start, d.end)))
                 .attr('y', d => yScale(d.name))
-                .attr('height', yScale.bandwidth())
+                .attr('height', yScale.bandwidth() / 2)
                 .attr('width', d => xScale(Math.max(d.start, d.end)) - xScale(Math.min(d.start, d.end)));
 
             // Draw Bar Labels
             bars.append('text')
-                .attr('class', d => {
-                    const barWidth = xScale(Math.max(d.start, d.end)) - xScale(Math.min(d.start, d.end));
-                    return barWidth < 30 ? 'bar-label outside' : 'bar-label';
-                })
+                .attr('class', 'bar-label outside') 
                 .attr('x', d => {
                     const barStart = xScale(Math.min(d.start, d.end));
                     const barEnd = xScale(Math.max(d.start, d.end));
-                    const barWidth = barEnd - barStart;
-                    if (barWidth < 30) {
-                        return barEnd + 5;
-                    }
-                    return barStart + barWidth / 2;
+                    return barStart + (barEnd - barStart) / 2;
                 })
-                .attr('y', d => yScale(d.name) + yScale.bandwidth() / 2)
+                .attr('y', d => yScale(d.name) + (yScale.bandwidth() / 2) + 14) // Position below the half-height bar
                 .attr('dy', '0.35em') 
-                .attr('text-anchor', d => {
-                    const barWidth = xScale(Math.max(d.start, d.end)) - xScale(Math.min(d.start, d.end));
-                    return barWidth < 30 ? 'start' : 'middle';
-                })
-                .attr('fill', d => {
-                    const barWidth = xScale(Math.max(d.start, d.end)) - xScale(Math.min(d.start, d.end));
-                    return barWidth < 30 ? 'var(--text-color)' : 'var(--bar-label-color)';
-                })
+                .attr('text-anchor', 'middle')
+                .attr('fill', 'var(--text-color)')
                 .text(d => d.label)
-                .each(function(d) {
-                    const barWidth = xScale(Math.max(d.start, d.end)) - xScale(Math.min(d.start, d.end));
-                    if (barWidth > 30) {
-                        d3.select(this).call(wrap, barWidth - 10);
-                    }
-                })
+
                 .on('dblclick', function(event, d, i) {
                     const currentText = d3.select(this);
                     const bbox = currentText.node().getBBox();
